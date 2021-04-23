@@ -7,6 +7,12 @@ public class CollectionWidget<S: Hashable, I: Hashable>: SectionedWidget<S, I> {
 	
 	var headerProvider: ((S) -> Widget?)?
 	
+	public override func setup() {
+		onCheckResize(handler: { (container) in
+			debugPrint("Check Resize")
+		})
+	}
+
 	public func onLayout(_ handler: @escaping (S) -> CollectionLayoutSection) {
 		layoutProvider = handler
 	}
@@ -25,6 +31,10 @@ public class CollectionWidget<S: Hashable, I: Hashable>: SectionedWidget<S, I> {
 	
 	public override func generateHeader(for section: S) -> Widget? {
 		return headerProvider?(section) 
+	}
+
+	public func calculateSize() {
+		debugPrint("Successfully intercepted size allocation")
 	}
 
 }
@@ -49,23 +59,18 @@ public class CollectionLayoutFlowSection: CollectionLayoutSection {
 	
 	public var columnSpacing: Int
 	
+	public var orientation: Gtk.Orientation
+
 	public var minChildren: Int
 	
 	public var maxChildren: Int
 
 	public var homogenous: Bool
 	
-	public init(rowSpacing: Int, columnSpacing: Int, children: Int, homogenous: Bool) {
+	public init(rowSpacing: Int, columnSpacing: Int, orientation: Gtk.Orientation, minChildren: Int, maxChildren: Int, homogenous: Bool) {
 		self.rowSpacing = rowSpacing
 		self.columnSpacing = columnSpacing
-		self.minChildren = children
-		self.maxChildren = children
-		self.homogenous = homogenous
-	}	
-	
-	public init(rowSpacing: Int, columnSpacing: Int, minChildren: Int, maxChildren: Int, homogenous: Bool) {
-		self.rowSpacing = rowSpacing
-		self.columnSpacing = columnSpacing
+		self.orientation = orientation
 		self.minChildren = minChildren
 		self.maxChildren = maxChildren
 		self.homogenous = homogenous
@@ -73,6 +78,7 @@ public class CollectionLayoutFlowSection: CollectionLayoutSection {
 	
 	public func generateContainer() -> Container {
 		let flowBox = FlowBox()
+		flowBox.orientation = orientation
 		flowBox.rowSpacing = rowSpacing
 		flowBox.columnSpacing = columnSpacing
 		flowBox.minChildrenPerLine = minChildren

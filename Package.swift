@@ -28,6 +28,10 @@ let package = Package(
             dependencies: ["GtkKit"]),
         .target(
         	name: "TestApp",
-        	dependencies: ["GtkKit"])
+        	dependencies: ["GtkKit"],
+        	resources: [
+        		.copy("ui.glade")
+        	]
+        )
     ]
 )

@@ -28,23 +28,14 @@ open class TabController: WidgetController {
 		}
 	}
 
-	public var mainIndex: Int {
-		get {
-			if let mainName = stack.visibleChildName {
-				return Int(mainName) ?? -1;
-			} else {
-				return -1;
-			}
-		}
-	}
-
 	public override var mainChild: WidgetController? {
 		get {
-			if mainIndex > -1 {
-				return children[mainIndex];
-			} else {
-				return nil;
+			for child in children {
+				if child.widget.ptr == stack.visibleChild.ptr {
+					return child
+				}
 			}
+			return nil
 		}
 	}
 
@@ -63,15 +54,13 @@ open class TabController: WidgetController {
 	}
 
 	public override func loadWidget() {
-		widget = Stack();
-		switcher = StackSwitcher();
-		switcher?.set(stack: stack);
+		widget = Stack()
+		switcher = StackSwitcher()
+		switcher?.set(stack: stack)
 		for i in 0..<children.count {
-			addToStack(children[i], at: i);
+			addToStack(children[i], at: i)
 		}
-		if children.count > 0 {
-			stack.setVisibleChild(name: "\(mainIndex)");
-		}
+		stack.transitionType = .crossfade
 	}
 
 	public override func addChild(_ controller: WidgetController) {
@@ -84,10 +73,16 @@ open class TabController: WidgetController {
 		addToStack(controller, at: index);
 	}
 
+	public func loadPositions() {
+		for i in 0..<children.count {
+			let child = children[i]
+			stack.set(child: child.widget, property: PropertyName.init("position"), value: Value(i))
+		}
+	}
+
 	internal func addToStack(_ controller: WidgetController, at index: Int) {
 		let widgetRef = controller.widget
-		stack.add(widget: widget);
-		loadPositions()
+		stack.addTitled(child: widgetRef, name: "", title: controller.tabItem.title)
 		loadItem(at: index);
 		controller.tabItem.onUpdate = { [weak self] in
 			self?.loadItem(at: index);
@@ -97,6 +92,7 @@ open class TabController: WidgetController {
 		widgetRef.onShow(handler: { [weak self] (_) in
 			self?.mainUpdated()
 		})
+		loadPositions()
 		controller.installedIn(self);
 	}
 
@@ -106,10 +102,10 @@ open class TabController: WidgetController {
 		}) {
 			children.remove(at: currentIndex);
 			children.insert(controller, at: index);
-			loadPositions()
 			controller.tabItem.onUpdate = { [weak self] in
 				self?.loadItem(at: index);
 			}
+			loadPositions()
 		}
 	}
 
@@ -126,22 +122,19 @@ open class TabController: WidgetController {
 			if removedMain {
 				mainUpdated();
 			}
-		}
-	}
-
-	public func loadPositions() {
-		for index in 0..<children.count {
-			let widget = children[index].widget
-			stack.set(child: widget, property: PropertyName.init("name"), value: "\(index)")
-			stack.set(child: widget, property: PropertyName.init("position"), value: index)
+			loadPositions()
 		}
 	}
 
 	public func loadItem(at index: Int) {
 		let widget = children[index].widget
-		let item = children[index].tabItem;
-		stack.set(child: widget, property: PropertyName.init("title"), value: item.title)
-		stack.set(child: widget, property: PropertyName.init("icon-name"), value: item.iconName)
+		let item = children[index].tabItem
+		if let title = item.title {
+			stack.set(child: widget, property: PropertyName.init("title"), value: Value(title))
+		}
+		if let iconName = item.iconName {
+			stack.set(child: widget, property: PropertyName.init("icon-name"), value: Value(item.iconName))
+		}
 	}
 
 	public override func mainUpdated() {

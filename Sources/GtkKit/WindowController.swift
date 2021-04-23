@@ -51,7 +51,6 @@ public class WindowController: HeaderController {
 		mainUpdated();
 	}
 	
-	
 	/// WindowController allows controllers to be shown over each other and dismissed, but will not dismiss its only child.
 	public override func dismissMainChild() -> Bool {
 		if children.count > 1 {

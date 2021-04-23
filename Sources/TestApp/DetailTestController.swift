@@ -10,6 +10,8 @@ public class DetailTestController: WidgetController {
 		let label = Label(text: "This is the detail controller!")
 		grid.attach(child: label, left: 0, top: 0, width: 1, height: 1)
 		grid.showAll()
+		print(grid.typeName)
+		print(grid.type)
 	}
 
 }

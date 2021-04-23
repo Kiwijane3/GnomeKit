@@ -4,25 +4,21 @@ import GtkKit
 
 public class SectionedListTestController: SectionedListController<String, String> {
 
+	public override var bundle: Bundle? {
+		return Bundle.module
+	}
+
 	public override func widgetDidLoad() {
 		headerbarItem.title = "Test List"
-		setSections(to: ["First Section", "Second Section"])
+		setSections(to: ["First Section"])
 		setItems(to: ["First Item", "Second Section"], in: "First Section")
-		setItems(to: ["First Item", "Second Section", "Third Section"], in: "Second Section")
 	}
 	
 	public override func generateWidget(for item: String) -> Widget {
-		print("Generating widget")
-		let row = ListBoxRow()
-		let box = Box(orientation: .horizontal, spacing: 8)
-		let label = Label(text: item)
-		label.styleContext.addClass(className: "body")
-		box.packStart(child: label, expand: false, fill: false, padding: 8)
-		row.add(widget: box)
-		row.selectable = false
-		row.activatable = true
-		row.setSizeRequest(width: 0, height: 32)
-		return row
+		let widget: Box = buildWidget(named: "glade_test_row")
+		let label: Label = widget.child(named: "label")
+		label.text = item
+		return widget
 	}
 	
 	public override func title(for section: String) -> String? {

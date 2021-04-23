@@ -2,7 +2,9 @@ import Foundation
 import Gtk
 
 // A sectioned widget is the base for widgets that display several vertically arranged containers, possibly with headers.
-public class SectionedWidget<S: Hashable, I: Hashable>: Box, SectionedModelDelegate {
+public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, SectionedModelDelegate {
+
+	public var box: Box
 
 	public var model: SectionedModel<S, I>? {
 		didSet {
@@ -25,27 +27,46 @@ public class SectionedWidget<S: Hashable, I: Hashable>: Box, SectionedModelDeleg
 	private var activationHandler: ((Int, Int) -> Void)?
 		
 	public init() {
-		super.init(orientation: .vertical, spacing: 8)
+		box = Box(orientation: .vertical, spacing: 8)
+		super.init(hadjustment: nil as Adjustment?, vadjustment: nil as Adjustment?)
+		self.add(widget: box)
+		box.showAll()
+		box.valign = .start
 		marginTop = 8
 		marginBottom = 8
 		marginStart = 8
 		marginEnd = 8
+		setup()
 	}
 	
 	public required init(raw: UnsafeMutableRawPointer) {
+		box = Box(orientation: .vertical, spacing: 8)
 		super.init(raw: raw)
+		add(widget: box)
+		box.valign = .start
+		box.showAll()
 		marginTop = 8
 		marginBottom = 8
 		marginStart = 8
 		marginEnd = 8
+		setup()
 	}
 	
 	public required init(retainingRaw raw: UnsafeMutableRawPointer) {
+		box = Box(orientation: .vertical, spacing: 8)
 		super.init(retainingRaw: raw)
+		add(widget: box)
+		box.valign = .start
+		box.showAll()
 		marginTop = 8
 		marginBottom = 8
 		marginStart = 8
 		marginEnd = 8
+		setup()
+	}
+
+	public func setup() {
+
 	}
 	
 	public func onCreateWidget(_ handler: @escaping (I) -> Widget) {
@@ -60,14 +81,14 @@ public class SectionedWidget<S: Hashable, I: Hashable>: Box, SectionedModelDeleg
 	    guard let section = section as? S else {
 	    	return	
 	    }
-	    let box = Box(orientation: .vertical, spacing: 8)
-	    sectionBoxMap[section] = box
+	    let sectionBox = Box(orientation: .vertical, spacing: 8)
+	    sectionBoxMap[section] = sectionBox
 	    if let header = generateHeader(for: section) {
-	    	box.packStart(child: header, expand: false, fill: false, padding: 0)
+	    	sectionBox.packStart(child: header, expand: false, fill: false, padding: 0)
 	    	sectionHeaderMap[section] = header
 	    }
 	    let container = generateContainer(for: section)
-	    box.packStart(child: container, expand: false, fill: false, padding: 0)
+	    sectionBox.packStart(child: container, expand: true, fill: true, padding: 0)
 	    // Setup activation
 	    if let listBox = container as? ListBox {
 	    	listBox.onRowActivated(handler: { [weak self, weak model] (listBox, row) in
@@ -79,9 +100,9 @@ public class SectionedWidget<S: Hashable, I: Hashable>: Box, SectionedModelDeleg
 		}
 	    sectionContainerMap[section] = container
 	    // TODO: Setup activation handling for the box.
-	    packStart(child: box, expand: false, fill: false, padding: 0)
-	    reorder(child: box, position: index)
-	    box.showAll()
+	    box.packStart(child: sectionBox, expand: false, fill: false, padding: 0)
+	    box.reorder(child: sectionBox, position: index)
+	    sectionBox.showAll()
 	}
 	
 	public func sectionedModel(removedSection section: AnyHashable, at index: Int) {

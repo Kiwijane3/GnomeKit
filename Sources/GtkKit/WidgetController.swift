@@ -1,15 +1,23 @@
 //
-//  WidgetController.swift
-//  Atk
-//
-//  Created by Jane Fraser on 19/10/20.
-//
-
+//  WidgetController
 import Foundation
 import Gtk
 import CGtk
+import GLibObject
 
 open class WidgetController {
+
+	open var bundle: Bundle? {
+		return nil
+	}
+
+	open var uiFile: String {
+		return "ui"
+	}
+
+	open var widgetName: String? {
+		return nil
+	}
 
 	public init() {
 
@@ -23,27 +31,53 @@ open class WidgetController {
 	public var widget: Widget {
 		get {
 			if let _widget = _widget {
-				return _widget;
+				return _widget
 			} else {
-				loadWidget();
-				return _widget!;
+				loadWidget()
+				widgetDidLoad()
+				return _widget!
 			}
 		}
 		set {
-			_widget = newValue;
+			_widget = newValue
 		}
 	}
 
 	/// Returns whether the widget has been loaded into the controller.
 	public var isWidgetLoaded: Bool {
 		get {
-			return _widget != nil;
+			return _widget != nil
 		}
 	}
 
 	/// Loads the widget for the the controller
 	open func loadWidget() {
-		widget = Grid();
+		if loadWidgetFromBuilder() {
+			return
+		}
+		widget = Grid()
+	}
+
+	// Attempts to load from the appropriate builder file. Returns true if successful
+	private func loadWidgetFromBuilder() -> Bool {
+		debugPrint("Attempting to load from builder")
+		guard let widgetName = widgetName else {
+			return false
+		}
+		guard let bundle = bundle else {
+			return false
+		}
+		guard let uiPath = bundle.path(forResource: uiFile, ofType: "glade") else {
+			return false
+		}
+		debugPrint("Loading from uiPath \(uiPath)")
+		let builder = Builder(file: uiPath)
+		guard let object = builder.getObject(name: widgetName), object.isAWidget() else {
+			return false
+		}
+		widget = Widget(retainingRaw: object.ptr)
+		debugPrint("Successfully loaded widget")
+		return true
 	}
 
 	/// Called once the widget has been loaded. This can be used to perform additional setup after loading the widget, particularly when it is automated, such as when the widget is loaded from Glade.
@@ -55,12 +89,18 @@ open class WidgetController {
 	public final func loadWidgetIfNeeded() {
 		if !isWidgetLoaded {
 			loadWidget();
+			widgetDidLoad()
 		}
 	}
 
 	public final func root<T: Widget>(as type: T.Type) -> T! {
 		loadWidgetIfNeeded();
-		return T.init(retainingRaw: widget.ptr);
+		return T.init(retainingRaw: widget.ptr)
+	}
+
+	public final func child<T: Widget>(named name: String) -> T! {
+		loadWidgetIfNeeded()
+		return widget.child(named: name, of: T.self)
 	}
 
 	// MARK:- Presentation
