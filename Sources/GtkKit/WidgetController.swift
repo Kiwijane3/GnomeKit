@@ -190,6 +190,17 @@ open class WidgetController {
 	/// The direct ancestor of this controller.
 	public var parent: WidgetController?;
 
+	public var windowController: WindowController? {
+		var current = parent
+		while let ancestor = current {
+			if let windowController = ancestor as? WindowController {
+				return windowController
+			}
+			current = ancestor.parent
+		}
+		return nil
+	}
+
 	public var navigationController: NavigationController? {
 		var current = parent
 		while let ancestor = current {

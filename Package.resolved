@@ -51,7 +51,7 @@
         "repositoryURL": "https://github.com/rhx/SwiftGdkPixbuf.git",
         "state": {
           "branch": "main",
-          "revision": "150cc4cb74dad0ac858cfaf4c63d3a5d06584281",
+          "revision": "5f9a0679d581e10456aff80be38a525868c68223",
           "version": null
         }
       },
@@ -95,7 +95,7 @@
         "package": "Gtk",
         "repositoryURL": "https://github.com/rhx/SwiftGtk.git",
         "state": {
-          "branch": "gtk3",
+          "branch": "main",
           "revision": "9c9078fab98e579577d9471f9f5745fd6560e9ce",
           "version": null
         }
@@ -114,7 +114,7 @@
         "repositoryURL": "https://github.com/rhx/SwiftPango.git",
         "state": {
           "branch": "main",
-          "revision": "3d2748781c2e14bb91e11adae837b928c554b4e2",
+          "revision": "a57d8605450b4e4157f61cf1b7a18b3fca973134",
           "version": null
         }
       },
