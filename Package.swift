@@ -14,7 +14,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "gir2swift", url: "https://github.com/rhx/gir2swift.git", .branch("main")),
-        .package(name: "Gtk", url: "https://github.com/rhx/SwiftGtk.git", .branch("gtk3")),
+        .package(name: "Gtk", url: "https://github.com/rhx/SwiftGtk.git", .branch("main")),
         .package(url: "https://github.com/onmyway133/DeepDiff.git", .branch("master"))
     ],
     targets: [
