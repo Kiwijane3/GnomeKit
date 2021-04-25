@@ -117,14 +117,14 @@ public class BezierPath {
 		// Since all contains and bounding box calculations are self-contained, we can just clear the path.
 		BezierPath.calcContext.newPath();
 		writePath(to: BezierPath.calcContext);
-		return BezierPath.calcContext.isInFill(point.x, point.y);
+		return BezierPath.calcContext.isInFill(Double(point.x), Double(point.y));
 	}
 	
 	public func strokeContains(_ point: CGPoint) -> Bool {
 		// Since all contains and bounding box calculations are self-contained, we can just clear the path.
 		BezierPath.calcContext.newPath();
 		writePath(to: BezierPath.calcContext);
-		return BezierPath.calcContext.isInStroke(point.x, point.y)
+		return BezierPath.calcContext.isInStroke(Double(point.x), Double(point.y))
 	}
 	
 	/** public var bounds: CGRect {
@@ -152,19 +152,19 @@ public class BezierPath {
 		for operation in operations {
 			switch operation {
 			case .move(let target):
-				context.moveTo(target.x, target.y);
+				context.moveTo(Double(target.x), Double(target.y));
 			case .line(let target):
-				context.lineTo(target.x, target.y);
+				context.lineTo(Double(target.x), Double(target.y));
 			case .arc(let center, let radius, let startAngle, let endAngle, let clockwise):
 				if clockwise {
-					context.arc(xc: center.x, yc: center.y, radius: radius, angle1: startAngle, angle2: endAngle);
+					context.arc(xc: Double(center.x), yc: Double(center.y), radius: radius, angle1: startAngle, angle2: endAngle);
 				} else {
-					context.arcNegative(xc: center.x, yc: center.y, radius: radius, angle1: startAngle, angle2: endAngle);
+					context.arcNegative(xc: Double(center.x), yc: Double(center.y), radius: radius, angle1: startAngle, angle2: endAngle);
 				}
 			case .quadCurve(let target, let control):
-				context.curveTo(x1: control.x, y1: control.y, x2: control.x, y2: control.y, x3: target.x, y3: target.y);
+				context.curveTo(x1: Double(control.x), y1: Double(control.y), x2: Double(control.x), y2: Double(control.y), x3: Double(target.x), y3: Double(target.y));
 			case .curve(let target, let controlA, let controlB):
-				context.curveTo(x1: controlA.x, y1: controlA.y, x2: controlB.x, y2: controlB.y, x3: target.x, y3: target.y);
+				context.curveTo(x1: Double(controlA.x), y1: Double(controlA.y), x2: Double(controlB.x), y2: Double(controlB.y), x3: Double(target.x), y3: Double(target.y));
 			case .close:
 				context.closePath();
 			}

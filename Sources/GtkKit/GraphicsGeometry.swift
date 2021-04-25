@@ -7,6 +7,7 @@
 
 import Foundation
 
+/**
 // CGPoint is a lightweight struct for storing a 2D point for graphical operations. Because the name Point might be confusing in code working with multiple coordinate systems, and GPoint was already defined by Gtk's dependencies, this struct is named after the equivalent datatype in UIKit for familiarity.
 public struct CGPoint: Equatable {
 
@@ -80,3 +81,4 @@ public struct CGRect: Equatable {
 	}
 	
 }
+**/
