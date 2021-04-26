@@ -38,6 +38,21 @@ public enum LineJoin {
 	case bevel
 }
 
+extension LineJoin {
+
+	internal var cairo: cairo_line_join_t {
+		switch self {
+		case .miter:
+			return .miter
+		case .round:
+			return .round
+		case .bevel:
+			return .bevel
+		}
+	}
+
+}
+
 let evenOddFillRule = FillRule.init(1);
 let windingFillRule = FillRule.init(0);
 
@@ -61,6 +76,8 @@ public class BezierPath {
 	
 	public var lineCapStyle: LineCap = .butt;
 	
+	public var lineJoinStyle: LineJoin = .bevel
+
 	public var miterLimit: Double = 10;
 	
 	public var usesEvenOddFillRule: Bool = false;
@@ -145,6 +162,7 @@ public class BezierPath {
 		var context = context;
 		context.lineWidth = lineWidth;
 		context.lineCap = lineCapStyle.cairo;
+		context.lineJoin = lineJoinStyle.cairo
 		context.miterLimit = miterLimit;
 		context.fillRule = usesEvenOddFillRule ? evenOddFillRule : windingFillRule;
 		if let dashPattern = dashPattern {
