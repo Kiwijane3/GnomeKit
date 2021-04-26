@@ -68,6 +68,10 @@ public class BezierPath {
 	public var dashPattern: [Double]?;
 	
 	public var dashPhase: Double = 0;
+
+	public init() {
+
+	}
 	
 	public func move(to target: CGPoint) {
 		operations.append(.move(target: target))

@@ -3,7 +3,7 @@ import CGdk
 import Gdk
 import Gtk
 
-public extension StyleContext {
+public extension StyleContextProtocol {
 
 	func getColor(for state: StateFlags) -> Color {
 		var raw = GdkRGBA()
