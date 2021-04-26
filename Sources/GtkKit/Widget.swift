@@ -1,5 +1,6 @@
 import Foundation
 import Gtk
+import Gdk
 
 public extension WidgetProtocol {
 

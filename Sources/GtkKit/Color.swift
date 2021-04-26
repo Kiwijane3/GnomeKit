@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Gdk
 import Cairo
 
 public class Color {
@@ -25,6 +26,13 @@ public class Color {
 		self.alpha = alpha;
 	}
 	
+	public init(from rgba: RGBA) {
+		self.red = rgba.red
+		self.green = rgba.green
+		self.blue = rgba.blue
+		self.alpha = rgba.alpha
+	}
+
 	public func set(on context: ContextProtocol) {
 		context.setSource(red: red, green: green, blue: blue, alpha: alpha);
 	}
