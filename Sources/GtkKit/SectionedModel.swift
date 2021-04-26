@@ -76,8 +76,11 @@ public class SectionedModel<S: Hashable, I: Hashable> {
 
 	public func setSections(to target: [S]) {
 		targetSections = target
-		sectionDifferences = Array(targetSections.difference(from: realSections))
-		startIdleIfNeeded()
+		let differences = Array(targetSections.difference(from: realSections))
+		if differences.count > 0 {
+			sectionDifferences = differences
+			startIdleIfNeeded()
+		}
 	}
 
 	public func setItems(to target: [I], in section: S) {
@@ -94,8 +97,10 @@ public class SectionedModel<S: Hashable, I: Hashable> {
 			realItems = []
 		}
 		let difference = target.difference(from: realItems!)
-		itemDifferences.append(SectionDifference(difference, in: section))
-		startIdleIfNeeded()
+		if difference.count > 0 {
+			itemDifferences.append(SectionDifference(difference, in: section))
+			startIdleIfNeeded()
+		}
 	}
 
 	public func applySectionChange(_ change: CollectionDifference<S>.Change) {
