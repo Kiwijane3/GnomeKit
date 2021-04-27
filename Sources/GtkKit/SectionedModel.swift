@@ -77,8 +77,8 @@ public class SectionedModel<S: Hashable, I: Hashable> {
 	public func setSections(to target: [S]) {
 		targetSections = target
 		let differences = Array(targetSections.difference(from: realSections))
+		sectionDifferences = differences
 		if differences.count > 0 {
-			sectionDifferences = differences
 			startIdleIfNeeded()
 		}
 	}

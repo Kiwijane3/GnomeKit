@@ -35,15 +35,15 @@ public extension GLibObject.ObjectProtocol {
 				case gfalse:
 					// Make the gobject strongly reference the wrapper.
 					swiftObjPointer.retain();
+					debugPrint("Swift object strongly referenced")
 				case gtrue:
 					// Make the gobject weakly reference the wrapper.
 					swiftObjPointer.release();
+					debugPrint("Swift object weakly referenced")
 				default:
 					break;
 				}
 			}
-			// Release the regular reference so we don't have two references from the wrapper.
-			unref();
 		}
 	}
 
