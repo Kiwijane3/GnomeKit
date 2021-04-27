@@ -126,7 +126,7 @@ public class BezierPath {
 	public func stroke(on context: ContextProtocol) {
 		context.save();
 		writePath(to: context);
-		context.fill();
+		context.stroke();
 		context.restore();
 	}
 	
@@ -161,7 +161,7 @@ public class BezierPath {
 	internal func writePath(to context: ContextProtocol) {
 		var context = context;
 		context.lineWidth = lineWidth;
-		context.lineCap = lineCapStyle.cairo;
+		context.lineCap = lineCapStyle.cairo
 		context.lineJoin = lineJoinStyle.cairo
 		context.miterLimit = miterLimit;
 		context.fillRule = usesEvenOddFillRule ? evenOddFillRule : windingFillRule;
