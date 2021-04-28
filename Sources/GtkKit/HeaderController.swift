@@ -36,7 +36,7 @@ public class HeaderController: WidgetController {
 		loadTitleView();
 		loadItems();
 		supplier?.onUpdate = { [weak self](field) in
-			print("On update")
+			print("Headerbar supplier field \(field) was updated, updated headerbar to reflect state")
 			switch field {
 			case .title:
 				self?.loadTitle();
@@ -45,6 +45,7 @@ public class HeaderController: WidgetController {
 			case .titleView:
 				self?.loadTitleView();
 			case .startItems, .endItems:
+				debugPrint("Loading items")
 				self?.loadItems();
 			default:
 				break;
