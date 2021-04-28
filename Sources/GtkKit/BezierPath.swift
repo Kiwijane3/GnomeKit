@@ -110,6 +110,10 @@ public class BezierPath {
 		operations.append(.quadCurve(target: target, control: control))
 	}
 	
+	public func close() {
+		operations.append(.close)
+	}
+
 	public func setLineDash(_ pattern: [Double]?, phase: Double) {
 		self.dashPattern = pattern;
 		self.dashPhase = phase;
