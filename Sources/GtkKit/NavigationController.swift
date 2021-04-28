@@ -166,7 +166,6 @@ public class NavigationHeaderSupplier: HeaderbarSupplier {
 	}
 
 	public var endItemCount: Int {
-		debugPrint("Number of endItems was \(supplier?.endItemCount ?? 0)")
 		return supplier?.endItemCount ?? 0
 	}
 
@@ -232,7 +231,6 @@ public class NavigationHeaderSupplier: HeaderbarSupplier {
 	}
 
 	public func endItem(at index: Int) -> BarItem {
-		debugPrint("Retrieving end item from supplier at index \(index)")
 		return supplier!.endItem(at: index);
 	}
 

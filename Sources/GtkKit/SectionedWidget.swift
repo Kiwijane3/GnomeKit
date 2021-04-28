@@ -58,10 +58,10 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		add(widget: box)
 		box.valign = .start
 		box.showAll()
-		marginTop = 8
-		marginBottom = 8
-		marginStart = 8
-		marginEnd = 8
+		box.marginTop = 8
+		box.marginBottom = 8
+		box.marginStart = 8
+		box.marginEnd = 8
 		setup()
 	}
 
