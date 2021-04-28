@@ -12,7 +12,7 @@ open class CollectionWidgetController<S: Hashable, I: Hashable>: SectionedWidget
 	public override func loadWidget() {
 		widget = CollectionWidget<S, I>()
 		collectionWidget.model = model
-		collectionWidget.onCreateWidget(generateWidget(for:))
+		collectionWidget.onCreateWidget(generateWidget(for:at:in:))
 		collectionWidget.onLayout(generateLayout(for:))
 		collectionWidget.onCreateHeader(generateHeader(for:))
 		collectionWidget.onRowActivated(activate(in:at:))

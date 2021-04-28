@@ -13,7 +13,7 @@ open class SectionedWidgetController<S: Hashable, I: Hashable>: WidgetController
 		model.setItems(to: items, in: section)
 	}
 
-	open func generateWidget(for item: I) -> Widget {
+	open func generateWidget(for item: I, at index: Int, in section: Int) -> Widget {
 		return Box(orientation: .horizontal, spacing: 0)
 	}
 

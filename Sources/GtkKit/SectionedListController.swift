@@ -12,13 +12,13 @@ open class SectionedListController<S: Hashable, I: Hashable>: SectionedWidgetCon
 	public override func loadWidget() {
 		widget = SectionedListWidget<S, I>()
 		sectionedList.model = model
-		sectionedList.onCreateWidget(generateWidget(for:))
+		sectionedList.onCreateWidget(generateWidget(for:at:in:))
 		sectionedList.onGetTitle(title(for:))
 		sectionedList.onRowActivated(activate(in:at:))
 		sectionedList.showAll()
 	}
 	
-	open override func generateWidget(for item: I) -> Widget {
+	open override func generateWidget(for item: I, at index: Int, in section: Int) -> Widget {
 		return ListBoxRow()
 	}
 	

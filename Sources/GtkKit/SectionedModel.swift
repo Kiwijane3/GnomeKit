@@ -60,6 +60,10 @@ public class SectionedModel<S: Hashable, I: Hashable> {
 		return targetSections.firstIndex(of: section)
 	}
 
+	public func indexOf(item: I, in section: S) -> Int? {
+		return items(in: section).firstIndex(of: item)
+	}
+
 	// Translates an index in the real data for the given section to the respective index in the target. Used to give application code indices that reflect their declared state
 	public func targetIndex(forItemAtRealIndex realIndex: Int, in section: S) -> Int? {
 		guard let realItems = realItemsMap[section], let targetItems = targetItemsMap[section] else {

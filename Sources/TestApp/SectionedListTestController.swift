@@ -14,7 +14,7 @@ public class SectionedListTestController: SectionedListController<String, String
 		setItems(to: ["First Item", "Second Section"], in: "First Section")
 	}
 	
-	public override func generateWidget(for item: String) -> Widget {
+	public override func generateWidget(for item: String, at index: Int, in section: Int) -> Widget {
 		let widget: Box = buildWidget(named: "glade_test_row")
 		let label: Label = widget.child(named: "label")
 		label.text = item
