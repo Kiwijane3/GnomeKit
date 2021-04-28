@@ -9,6 +9,11 @@ public class CollectionTestController: CollectionWidgetController<String, String
 	}
 
 	public override func widgetDidLoad() {
+		headerbarItem.endItems = [
+			BarButtonItem(iconName: "list-add-symbolic", onClick: { (button) in
+				debugPrint("Testing button clicked")
+			})
+		]
 		setSections(to: [
 			"First Section"
 		])

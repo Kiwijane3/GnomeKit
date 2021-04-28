@@ -26,11 +26,9 @@ public class HeaderController: WidgetController {
 	}
 	
 	public func loadHeader() {
-		print("loadeHeader")
 		headerBar.removeAllChildren()
 		supplier?.onUpdate = nil;
 		supplier = mainChild?.headerbarSupplier;
-		print("Loading header with item \(supplier), had title \(supplier?.title)")
 		loadTitle();
 		loadSubtitle();
 		loadTitleView();
@@ -55,7 +53,6 @@ public class HeaderController: WidgetController {
 	}
 	
 	public func loadTitle() {
-		print("Loading title \(supplier?.title) from \(supplier)")
 		if headerBar.title != supplier?.title {
 			headerBar.title = supplier?.title
 		}
@@ -80,12 +77,11 @@ public class HeaderController: WidgetController {
 		if let supplier = supplier {
 			for i in 0..<supplier.startItemCount {
 				let widget = supplier.startItem(at: i).generate();
-				headerBar.packStart(child: WidgetRef(widget.widget_ptr));
+				headerBar.packStart(child: widget);
 			}
 			for i in 0..<supplier.endItemCount {
-				debugPrint("Adding end item at index \(i)")
-				let widget = supplier.startItem(at: i).generate();
-				headerBar.packEnd(child: WidgetRef(widget.widget_ptr));
+				let widget = supplier.endItem(at: i).generate();
+				headerBar.packEnd(child: widget);
 			}
 		}
 	}
