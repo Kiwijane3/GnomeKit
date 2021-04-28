@@ -125,7 +125,10 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		let container = sectionContainerMap[section]
 		// Sectioned models currently accepts section containers that are listboxes or flowboxes. These are handled separately, since their insert methods aren't inherited from a common ancestor, despite similar signature and function.
 		if let listBox = container as? ListBox {
-			listBox.insert(child: widget, position: index)
+			let row = ListBoxRow()
+			row.add(widget: widget)
+			row.selectable = false
+			listBox.insert(child: row, position: index)
 		}
 		if let flowBox = container as? FlowBox {
 			flowBox.insert(widget: widget, position: index)

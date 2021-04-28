@@ -23,6 +23,9 @@ public class CollectionWidget<S: Hashable, I: Hashable>: SectionedWidget<S, I> {
 	
 	public override func generateContainer(for section: S) -> Container {
 		if let container = layoutProvider?(section).generateContainer() {
+			if let container = container as? FlowBox {
+				container.selectionMode = .none
+			}
 			return container
 		} else {
 			return ListBox()
