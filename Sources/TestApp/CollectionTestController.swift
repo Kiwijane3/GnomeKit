@@ -37,7 +37,7 @@ public class CollectionTestController: CollectionWidgetController<String, String
 		], in: "Second Section")
 	}
 
-	public override func generateWidget(for item: String, at index: Int, in section: Int) -> Widget {
+	public override func generateWidget(for item: String) -> Widget {
 		let overlay: Overlay = buildWidget(named: "glade_test_box")
 		return overlay
 	}
