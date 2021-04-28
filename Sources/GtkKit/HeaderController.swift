@@ -82,6 +82,7 @@ public class HeaderController: WidgetController {
 				headerBar.packStart(child: WidgetRef(widget.widget_ptr));
 			}
 			for i in 0..<supplier.endItemCount {
+				debugPrint("Adding end item at index \(i)")
 				let widget = supplier.startItem(at: i).generate();
 				headerBar.packEnd(child: WidgetRef(widget.widget_ptr));
 			}
