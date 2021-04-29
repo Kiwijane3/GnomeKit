@@ -40,7 +40,6 @@ open class WindowController: HeaderController {
 		}
 		window.setDefaultSize(width: 1024, height: 680)
 		window.showAll()
-		widgetDidLoad();
 	}
 	
 	public override func show(_ controller: WidgetController) {
