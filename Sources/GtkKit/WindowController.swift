@@ -8,7 +8,7 @@
 import Foundation
 import Gtk
 
-public class WindowController: HeaderController {
+open class WindowController: HeaderController {
 	
 	public var application: Application;
 	
@@ -38,7 +38,7 @@ public class WindowController: HeaderController {
 		if hasHeaderbar {
 			window.set(titlebar: headerBar);
 		}
-		window.setDefaultSize(width: 640, height: 480)
+		window.setDefaultSize(width: 1024, height: 680)
 		window.showAll()
 		widgetDidLoad();
 	}

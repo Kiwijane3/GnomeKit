@@ -1,4 +1,3 @@
-//
 //  ModelPresentation.swift
 //  GtkMvc
 //
@@ -9,6 +8,5 @@ import Foundation
 import Gtk
 
 public class ModalPresentation {
-	
 	
 }

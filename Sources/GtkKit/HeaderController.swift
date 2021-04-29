@@ -8,9 +8,8 @@
 import Foundation
 import Gtk
 
-/// HeaderController is the base class for WidgetControllers that manage a HeaderBar. This includes window controllers and dialog controllers
-public class HeaderController: WidgetController {
-	
+open class HeaderController: WidgetController {
+
 	public var headerBar: HeaderBar;
 	
 	public var supplier: HeaderbarSupplier?;
