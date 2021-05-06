@@ -5,10 +5,18 @@ public class SectionedListWidget<S: Hashable, I: Hashable>: SectionedWidget<S, I
 
 	var titleProvider: ((S) -> String?)?
 	
+	var defaultDecoration: SectionDecoration = .frame
+
+	var decorationProvider: ((S) -> SectionDecoration?)?
+
 	public func onGetTitle(_ handler: @escaping ((S) -> String?)) {
 		titleProvider = handler
 	}
 	
+	public func onGetDecoration(_ handler: @escaping ((S) -> SectionDecoration?)) {
+		decorationProvider = handler
+	}
+
 	public override func generateHeader(for section: S) -> Widget? {
 		if let sectionTitle = titleProvider?(section) {
 			let box = Box(orientation: .horizontal, spacing: 8)
@@ -23,8 +31,16 @@ public class SectionedListWidget<S: Hashable, I: Hashable>: SectionedWidget<S, I
 	
 	public override func generateContainer(for section: S) -> Container {
 		let listBox = ListBox()
-		listBox.styleContext.addClass(className: "frame")
+		let decoration = decorationProvider?(section) ?? defaultDecoration
+		if decoration == .frame {
+			listBox.styleContext.addClass(className: "frame")
+		}
 		return listBox
 	}
 
+}
+
+public enum SectionDecoration {
+	case none
+	case frame
 }

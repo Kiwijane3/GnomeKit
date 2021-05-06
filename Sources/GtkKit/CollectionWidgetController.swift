@@ -3,14 +3,15 @@ import Gtk
 
 open class CollectionWidgetController<S: Hashable, I: Hashable>: SectionedWidgetController<S, I> {
 
-	public var collectionWidget: CollectionWidget<S, I>! {
-		get {
-		 return widget as! CollectionWidget<S, I>
-		}
-	}
+	public var collectionWidget: CollectionWidget<S, I>!
 
 	public override func loadWidget() {
-		widget = CollectionWidget<S, I>()
+		if loadWidgetFromBuilder() {
+			collectionWidget = child(named: "collectionWidget")
+		} else {
+			collectionWidget = CollectionWidget<S, I>()
+			widget = collectionWidget
+		}
 		collectionWidget.model = model
 		collectionWidget.onCreateWidget(generateWidget(for:))
 		collectionWidget.onLayout(generateLayout(for:))

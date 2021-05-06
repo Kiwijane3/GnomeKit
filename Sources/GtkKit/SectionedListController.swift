@@ -3,18 +3,20 @@ import Gtk
 
 open class SectionedListController<S: Hashable, I: Hashable>: SectionedWidgetController<S, I> {
 
-	public var sectionedList: SectionedListWidget<S, I>! {
-		get {
-			return widget as? SectionedListWidget<S, I>
-		}
-	}
+	public var sectionedList: SectionedListWidget<S, I>!
 
 	public override func loadWidget() {
-		widget = SectionedListWidget<S, I>()
+		if loadWidgetFromBuilder() {
+			sectionedList = child(named: "sectionedList")
+		} else {
+			sectionedList = SectionedListWidget<S, I>()
+			widget = sectionedList
+		}
 		sectionedList.model = model
 		sectionedList.onCreateWidget(generateWidget(for:))
 		sectionedList.onGetTitle(title(for:))
 		sectionedList.onRowActivated(activate(in:at:))
+		sectionedList.onGetDecoration(decoration(for:))
 		sectionedList.showAll()
 	}
 	
@@ -23,6 +25,10 @@ open class SectionedListController<S: Hashable, I: Hashable>: SectionedWidgetCon
 	}
 	
 	open func title(for section: S) -> String? {
+		return nil
+	}
+
+	open func decoration(for section: S) -> SectionDecoration? {
 		return nil
 	}
  

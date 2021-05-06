@@ -4,7 +4,7 @@ import Gtk
 // A sectioned widget is the base for widgets that display several vertically arranged containers, possibly with headers.
 public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, SectionedModelDelegate {
 
-	public var box: Box
+	var box: Box
 
 	public var model: SectionedModel<S, I>? {
 		didSet {
@@ -14,13 +14,13 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 	}
 
 	// The containing boxes for each section. Holds the content container and header.
-	var sectionBoxMap: [S: Box] = [:]
+	var sectionBoxMap = [S: Box]()
 	
 	// The container for each section
-	var sectionContainerMap: [S: Container] = [:]
+	var sectionContainerMap = [S: Container]()
 	
 	// The header for each section
-	var sectionHeaderMap: [S: Widget] = [:]
+	var sectionHeaderMap = [S: Widget]()
 	
 	private var widgetCreator: ((I) -> Widget)?
 	
@@ -32,9 +32,9 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		self.add(widget: box)
 		box.showAll()
 		box.valign = .start
-		marginTop = 8
-		marginBottom = 8
-		marginStart = 8
+		box.marginTop = 8
+		box.marginBottom = 8
+		box.marginStart = 8
 		marginEnd = 8
 		setup()
 	}
@@ -45,10 +45,10 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		add(widget: box)
 		box.valign = .start
 		box.showAll()
-		marginTop = 8
-		marginBottom = 8
-		marginStart = 8
-		marginEnd = 8
+		box.marginTop = 8
+		box.marginBottom = 8
+		box.marginStart = 8
+		box.marginEnd = 8
 		setup()
 	}
 	

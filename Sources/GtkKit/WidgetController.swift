@@ -59,7 +59,7 @@ open class WidgetController {
 	}
 
 	// Attempts to load from the appropriate builder file. Returns true if successful
-	private func loadWidgetFromBuilder() -> Bool {
+	public func loadWidgetFromBuilder() -> Bool {
 		debugPrint("Attempting to load from builder")
 		guard let widgetName = widgetName else {
 			return false
