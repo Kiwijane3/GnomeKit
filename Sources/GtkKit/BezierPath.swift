@@ -110,6 +110,14 @@ public class BezierPath {
 		operations.append(.quadCurve(target: target, control: control))
 	}
 	
+	public func addRect(_ rect: CGRect) {
+		operations.append(.move(target: rect.origin))
+		operations.append(.line(target: CGPoint(x: rect.maxX, y: rect.minY)))
+		operations.append(.line(target: CGPoint(x: rect.maxX, y: rect.maxY)))
+		operations.append(.line(target: CGPoint(x: rect.minX, y: rect.maxY)))
+		operations.append(.close)
+	}
+
 	public func close() {
 		operations.append(.close)
 	}
