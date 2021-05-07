@@ -1,4 +1,5 @@
 import Foundation
+import GLib
 import Gtk
 import Gdk
 import CGdk
@@ -50,6 +51,17 @@ public extension WidgetProtocol {
 			return (rgba.red + rgba.green + rgba.blue) / 3
 		}
 		return averageLuminance(foreground) > averageLuminance(background)
+	}
+
+	func addTickCallback(_ handler: @escaping (WidgetRef, FrameClockRef) -> Bool) -> Int{
+		let holder = ClosureHolder2<WidgetRef, FrameClockRef, Bool>(handler)
+		let opaque = Unmanaged<ClosureHolder2<WidgetRef, FrameClockRef, Bool>>.passRetained(holder).toOpaque()
+		return addTick(callback: { (widgetPtr, clockPtr, holderPtr) -> gboolean in
+			let holder = Unmanaged<ClosureHolder2<WidgetRef, FrameClockRef, Bool>>.fromOpaque(holderPtr!).takeUnretainedValue()
+			return holder.call(WidgetRef(raw: widgetPtr!), FrameClockRef(raw: clockPtr!)) ? 1 : 0
+		}, userData: opaque, notify: { (holderPtr) in
+			Unmanaged<ClosureHolder2<WidgetRef, FrameClockRef, Bool>>.fromOpaque(holderPtr!).release()
+		})
 	}
 
 }
