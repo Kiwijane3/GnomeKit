@@ -37,6 +37,10 @@ public class Color {
 		context.setSource(red: red, green: green, blue: blue, alpha: alpha);
 	}
 	
+	public func withAlphaComponent(_ alpha: Double) -> Color {
+		return Color(red: red, green: green, blue: blue, alpha: alpha)
+	}
+
 }
 
 public extension Color {
