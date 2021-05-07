@@ -15,7 +15,7 @@ let package = Package(
     dependencies: [
         .package(name: "gir2swift", url: "https://github.com/rhx/gir2swift.git", .branch("main")),
         .package(name: "Gtk", url: "https://github.com/rhx/SwiftGtk.git", .branch("main")),
-        .package(url: "https://github.com/onmyway133/DeepDiff.git", .branch("master"))
+        .package(url: "https://github.com/onmyway133/DeepDiff.git", .exact("2.3.1"))
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.

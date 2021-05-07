@@ -5,9 +5,9 @@
         "package": "DeepDiff",
         "repositoryURL": "https://github.com/onmyway133/DeepDiff.git",
         "state": {
-          "branch": "master",
-          "revision": "94e90ff19a3885b48e9beed3d9d8995797adaccd",
-          "version": null
+          "branch": null,
+          "revision": "010ebbe1ce5ebeaee37a3d2f4a8c03f0e75b8045",
+          "version": "2.3.1"
         }
       },
       {
