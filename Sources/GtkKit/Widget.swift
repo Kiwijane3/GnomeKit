@@ -64,4 +64,15 @@ public extension WidgetProtocol {
 		})
 	}
 
+	func addTickCallback(_ handler: @escaping (WidgetRef) -> Bool) -> Int {
+		let holder = ClosureHolder<WidgetRef, Bool>(handler)
+		let opaque = Unmanaged<ClosureHolder<WidgetRef, Bool>>.passRetained(holder).toOpaque()
+		return addTick(callback: { (widgetPtr, _, holderPtr) -> gboolean in
+			let holder = Unmanaged<ClosureHolder<WidgetRef, Bool>>.fromOpaque(holderPtr!).takeUnretainedValue()
+			return holder.call(WidgetRef(raw: widgetPtr!)) ? 1 : 0
+		}, userData: opaque, notify: { (holderPtr) in
+			Unmanaged<ClosureHolder<WidgetRef, Bool>>.fromOpaque(holderPtr!).release()
+		})
+	}
+
 }
