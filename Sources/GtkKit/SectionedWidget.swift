@@ -98,7 +98,13 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 	    		}
 	    	})
 		}
-
+		if let flowBox = container as? FlowBox {
+			flowBox.onChildActivated { [weak self, weak model] (flowBox, child) in
+				if let sectionIndex = model?.indexOf(section: section), let itemIndex = model?.targetIndex(forItemAtRealIndex: child.index, in: section) {
+					self?.activationHandler?(sectionIndex, itemIndex)
+				}
+			}
+		}
 		sectionContainerMap[section] = container
 	    // TODO: Setup activation handling for the box.
 	    box.packStart(child: sectionBox, expand: false, fill: false, padding: 0)
