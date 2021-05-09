@@ -9,6 +9,7 @@ public class CollectionTestController: CollectionWidgetController<String, String
 	}
 
 	public override func widgetDidLoad() {
+		print(isDarkTheme())
 		headerbarItem.endItems = [
 			BarButtonItem(iconName: "list-add-symbolic", onClick: { (button) in
 				debugPrint("Testing button clicked")
@@ -38,7 +39,9 @@ public class CollectionTestController: CollectionWidgetController<String, String
 	}
 
 	public override func generateWidget(for item: String) -> Widget {
-		let overlay: Overlay = buildWidget(named: "glade_test_box")
+		let overlay: Frame = buildWidget(named: "glade_test_box")
+		let label: Label = overlay.child(named: "test_label")
+		label.text = item
 		return overlay
 	}
 

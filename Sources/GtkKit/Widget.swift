@@ -35,24 +35,6 @@ public extension WidgetProtocol {
 		return nil
 	}
 
-	/// Returns whether the current theme is dark, based on analysing the text color and the background color.
-	func isDarkTheme() -> Bool {
-		// We do this by comparing the foreground and background colors.
-		// Light themes use dark foregrounds on light backgrounds, so the average luminence of the background should be greater than the foreground's
-		// Vice versa for dark themes.
-		let styleContext = getStyleContext()!
-		var gForeground = GdkRGBA.init()
-		var foreground = RGBARef(raw: &gForeground)
-		styleContext.getColor(state: .normal, color: foreground)
-		var gBackground = GdkRGBA.init()
-		var background = RGBARef(raw: &gBackground)
-		styleContext.getBackgroundColor(state: .normal, color: background)
-		var averageLuminance = { (rgba: RGBAProtocol) -> Double in
-			return (rgba.red + rgba.green + rgba.blue) / 3
-		}
-		return averageLuminance(foreground) > averageLuminance(background)
-	}
-
 	func addTickCallback(_ handler: @escaping (WidgetRef, FrameClockRef) -> Bool) -> Int{
 		let holder = ClosureHolder2<WidgetRef, FrameClockRef, Bool>(handler)
 		let opaque = Unmanaged<ClosureHolder2<WidgetRef, FrameClockRef, Bool>>.passRetained(holder).toOpaque()

@@ -29,12 +29,13 @@
     <property name="shadow-type">out</property>
     <child>
       <object class="GtkOverlay">
-        <property name="width-request">200</property>
-        <property name="height-request">200</property>
+        <property name="width-request">250</property>
+        <property name="height-request">250</property>
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <child>
           <object class="GtkLabel">
+            <property name="name">test_label</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="halign">center</property>

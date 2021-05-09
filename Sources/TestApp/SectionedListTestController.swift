@@ -17,6 +17,7 @@ public class SectionedListTestController: SectionedListController<String, String
 	public override func generateWidget(for item: String) -> Widget {
 		let widget: Box = buildWidget(named: "glade_test_row")
 		let label: Label = widget.child(named: "label")
+
 		label.text = item
 		return widget
 	}

@@ -35,6 +35,7 @@
         <property name="can-focus">False</property>
         <child>
           <object class="GtkLabel">
+            <property name="name">test_label</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="halign">center</property>
