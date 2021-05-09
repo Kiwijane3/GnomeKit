@@ -4,5 +4,5 @@ import GtkKit
 
 Application.run(startupHandler: nil) { (app) in
 	let windowController = WindowController(application: Application(app))
-	windowController.show(CollectionTestController())
+	windowController.show(NavigationController(withRoot: CollectionTestController()))
 }

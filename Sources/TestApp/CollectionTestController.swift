@@ -46,4 +46,9 @@ public class CollectionTestController: CollectionWidgetController<String, String
 		return CollectionLayoutFlowSection(rowSpacing: 8, columnSpacing: 8, orientation: .init(0), minChildren: 1, maxChildren: 10, homogenous: false)
 	}
 
+	public override func activate(in section: Int, at index: Int) {
+	    let controller = LabelController(text: "\(section):\(index)")
+	    navigationController?.push(controller)
+	}
+
 }

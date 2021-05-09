@@ -71,8 +71,9 @@ public class NavigationController: WidgetController {
 	public func push(_ controller: WidgetController) {
 		addChild(controller);
 		controller.widget.showAll()
-		stack.addNamed(child: WidgetRef(mainChild!.widget.widget_ptr), name: "\(mainIndex)")
-		stack.setVisibleChildFull(name: "\(mainIndex)", transition: .slideLeft)
+		stack.addNamed(child: controller.widget, name: "\(mainIndex)")
+		stack.transitionType = .slideLeft
+		stack.setVisible(child: controller.widget)
 		mainChild?.installedIn(self)
 		stack.showAll()
 		navigationHeaderSupplier.push(supplier: controller.headerbarSupplier)
@@ -82,14 +83,15 @@ public class NavigationController: WidgetController {
 	public func pop() {
 		if children.count > 1 {
 			// Animate the transition.
-			stack.setVisibleChildFull(name: "\(mainIndex - 1)", transition: .slideRight);
-			let removedController = children.popLast()!;
-			stack.remove(widget: WidgetRef(removedController.widget.widget_ptr));
+			stack.transitionType = .slideRight
+			stack.setVisible(child: children[children.count - 1].widget)
+			let removedController = children.popLast()!
+			stack.remove(widget: WidgetRef(removedController.widget.widget_ptr))
 			removeChild(removedController)
-			mainChild?.installedIn(self);
-			stack.showAll();
+			mainChild?.installedIn(self)
+			stack.showAll()
 			navigationHeaderSupplier.pop()
-			mainUpdated();
+			mainUpdated()
 		}
 	}
 
@@ -219,7 +221,7 @@ public class NavigationHeaderSupplier: HeaderbarSupplier {
 	public func startItem(at index: Int) -> BarItem {
 		if showsBackButton {
 			if index == 0 {
-				return BarButtonItem(iconName: "go-previous", onClick: { [weak self] (button) in
+				return BarButtonItem(iconName: "go-previous-symbolic", onClick: { [weak self] (button) in
 					self?.navigationController.pop()
 				})
 			} else {

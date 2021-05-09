@@ -60,7 +60,7 @@
         "repositoryURL": "https://github.com/rhx/SwiftGIO.git",
         "state": {
           "branch": "main",
-          "revision": "d760d9bcb5396467d79acf21b1fe2260c5e1c5a5",
+          "revision": "213f07b38eebafd4b97cbb77b80b6322d36b6d5e",
           "version": null
         }
       },
@@ -69,7 +69,7 @@
         "repositoryURL": "https://github.com/rhx/SwiftGLib.git",
         "state": {
           "branch": "main",
-          "revision": "f0b90983a891d2adc0f9f412569de3493348e3be",
+          "revision": "fb1192e6159a1c6dcfa108b18b351710803bf066",
           "version": null
         }
       },
@@ -78,7 +78,7 @@
         "repositoryURL": "https://github.com/rhx/SwiftGModule.git",
         "state": {
           "branch": "main",
-          "revision": "65344dc5f3ae1b7a9edbc270103aaf1d00f3aae2",
+          "revision": "8450bc459412150095cce94812c6074898c894d6",
           "version": null
         }
       },
@@ -87,7 +87,7 @@
         "repositoryURL": "https://github.com/rhx/SwiftGObject.git",
         "state": {
           "branch": "main",
-          "revision": "9b2fff2eb58a5afecc15c92e61fd40c00526022b",
+          "revision": "820826b45702ea5b00768c2fdbaf2962461dc17c",
           "version": null
         }
       },
