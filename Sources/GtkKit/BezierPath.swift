@@ -61,7 +61,7 @@ public class BezierPath {
 	// This empty shared graphical context is used by CGPoint to calculate path extents and contains.
 	private static var calcContext: ContextProtocol = Context(surface: imageSurfaceCreate(format: .init(0), width: 0, height: 0));
 	
-	internal enum Operation {
+	enum Operation {
 		case move(target: CGPoint)
 		case line(target: CGPoint)
 		case arc(center: CGPoint, radius: Double, startAngle: Double, endAngle: Double, clockwise: Bool)
@@ -143,7 +143,7 @@ public class BezierPath {
 	}
 	
 	public func contains(_ point: CGPoint) -> Bool {
-		return fillContains(point);
+		return fillContains(point)
 	}
 
 	public func fillContains(_ point: CGPoint) -> Bool {
