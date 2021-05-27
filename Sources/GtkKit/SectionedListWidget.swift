@@ -21,7 +21,7 @@ public class SectionedListWidget<S: Hashable, I: Hashable>: SectionedWidget<S, I
 		if let sectionTitle = titleProvider?(section) {
 			let box = Box(orientation: .horizontal, spacing: 8)
 			let label = Label(text: sectionTitle)
-			label.styleContext.addClass(className: "title-3")
+			label.styleContext.addClass(className: "heading")
 			box.packStart(child: label, expand: false, fill: false, padding: 0)
 			return box
 		} else {
