@@ -84,6 +84,7 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 	    guard let section = section as? S else {
 	    	return	
 	    }
+	    print("Adding section \(section) at index \(index)")
 	    let sectionBox = Box(orientation: .vertical, spacing: 8)
 	    sectionBoxMap[section] = sectionBox
 	    if let header = generateHeader(for: section) {
@@ -119,6 +120,7 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 	    guard let section = section as? S else {
 	    	return
 	    }
+	    print("Removing section \(S) at index \(index)")
 	    if let box = sectionBoxMap[section] {
 	    	remove(widget: box)
 	    	sectionBoxMap[section] = nil
@@ -131,9 +133,7 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		guard let section = section as? S, let item = item as? I else {
 			return
 		}
-		guard let itemIndex = model?.indexOf(item: item, in: section), let sectionIndex = model?.indexOf(section: section) else {
-			return
-		}
+		print("Adding item \(item) at index \(index) in section \(section)")
 		let widget = widgetCreator?(item) ?? Box(orientation: .horizontal, spacing: 8)
 		let container = sectionContainerMap[section]
 		// Sectioned models currently accepts section containers that are listboxes or flowboxes. These are handled separately, since their insert methods aren't inherited from a common ancestor, despite similar signature and function.
@@ -150,6 +150,7 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		guard let section = section as? S else {
 			return
 		}
+		print("Removing item \(item) at index \(index) in section \(section)")
 		let container = sectionContainerMap[section]
 		if let listBox = container as? ListBox, let child = listBox.getRowAt(y: index) {
 			listBox.remove(widget: child)

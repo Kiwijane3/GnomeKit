@@ -15,8 +15,17 @@
         "repositoryURL": "https://github.com/rhx/gir2swift.git",
         "state": {
           "branch": "main",
-          "revision": "a711286bf11d98ac8da6da2c6536740b01197c38",
+          "revision": "afa2462b9cd310cc2482d9a6f5268da414fd0dde",
           "version": null
+        }
+      },
+      {
+        "package": "swift-argument-parser",
+        "repositoryURL": "https://github.com/apple/swift-argument-parser",
+        "state": {
+          "branch": null,
+          "revision": "986d191f94cec88f6350056da59c2e59e83d1229",
+          "version": "0.4.3"
         }
       },
       {
@@ -96,7 +105,7 @@
         "repositoryURL": "https://github.com/rhx/SwiftGtk.git",
         "state": {
           "branch": "main",
-          "revision": "82b9e316af4bc0761f51560110fe0dcf3894a4c7",
+          "revision": "1973834d30991a34e4664beea76500b66bfb6145",
           "version": null
         }
       },
