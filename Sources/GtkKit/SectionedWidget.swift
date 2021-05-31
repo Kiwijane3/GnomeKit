@@ -120,7 +120,7 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 	    guard let section = section as? S else {
 	    	return
 	    }
-	    print("Removing section \(S) at index \(index)")
+	    print("Removing section \(section) at index \(index)")
 	    if let box = sectionBoxMap[section] {
 	    	remove(widget: box)
 	    	sectionBoxMap[section] = nil
