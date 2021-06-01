@@ -152,7 +152,7 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		}
 		print("Removing item \(item) at index \(index) in section \(section)")
 		let container = sectionContainerMap[section]
-		if let listBox = container as? ListBox, let child = listBox.getRowAt(y: index) {
+		if let listBox = container as? ListBox, let child = listBox.getRowAtIndex(index_: index) {
 			listBox.remove(widget: child)
 		}
 		if let flowBox = container as? FlowBox, let child = flowBox.getChildAtIndex(idx: index) {
