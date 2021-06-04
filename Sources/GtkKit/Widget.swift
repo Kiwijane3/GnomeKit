@@ -16,14 +16,6 @@ public extension WidgetProtocol {
 		if self.name == name {
 			return T(retainingRaw: ptr)
 		}
-		if isABin() {
-			print("Searching bin")
-			let binRef = BinRef(raw: ptr)
-			if let contained = binRef.child {
-				print("Found child of bin")
-				return contained.child(named: name, of: type)
-			}
-		}
 		if isAContainer() {
 			let containerRef = ContainerRef(raw: ptr)
 			// Children returns a nil pointer if there are no children.
