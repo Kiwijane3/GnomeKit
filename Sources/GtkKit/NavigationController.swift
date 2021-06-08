@@ -59,15 +59,6 @@ public class NavigationController: WidgetController {
 		push(controller);
 	}
 
-	public override func dismissMainChild() -> Bool {
-		if children.count > 1 {
-			pop();
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	public func push(_ controller: WidgetController) {
 		addChild(controller);
 		controller.widget.showAll()
