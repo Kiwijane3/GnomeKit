@@ -134,7 +134,7 @@ public class SideDetailController: WidgetController {
 		}
 		detailContainer.transitionType = .slideLeft
 		detailContainer.set(revealChild: true)
-		mainChild?.sideDetailControllerExpanded()
+		mainChild?.onWidgetReallocated()
 	}
 
 	public func hideDetail() {
@@ -142,19 +142,7 @@ public class SideDetailController: WidgetController {
 			return
 		}
 		detailContainer.set(revealChild: false)
-		mainChild?.sideDetailControllerCollapsed()
-	}
-
-}
-
-public extension WidgetController {
-
-	func sideDetailControllerCollapsed() {
-		return
-	}
-
-	func sideDetailControllerExpanded() {
-		return
+		mainChild?.onWidgetReallocated()
 	}
 
 }

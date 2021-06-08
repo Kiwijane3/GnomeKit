@@ -266,6 +266,11 @@ open class WidgetController {
 		parent?.mainUpdated();
 	}
 
+	/// This function is called when a parent controller reallocates the proportion of the screen allocated to the controller, such as when a SplitViewController hides the primary view. It is not called when the window is resized.
+	open func onWidgetReallocated() {
+		return
+	}
+
 	// MARK:- Items for container controllers
 
 	/// The HeaderbarItem to be displayed from this controller.
