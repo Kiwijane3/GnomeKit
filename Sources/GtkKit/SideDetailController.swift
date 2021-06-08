@@ -96,15 +96,12 @@ public class SideDetailController: WidgetController {
 
 	public var dismissalCompleteHandlerId: Int?
 
-	public override func dismissDetailChild() -> Bool {
-		debugPrint("dismissDetailChild")
+	public override func dismissSecondary() -> Bool {
 		guard let detailChild = secondaryChild else {
 			return false
 		}
-		debugPrint("Detail child exists")
 		if let detailContainer = detailContainer {
 			// Remove the detail child and remove its widget from the revealer once the revealer is collapsed.
-			debugPrint("Child revealed: \(detailContainer.childRevealed)")
 			if detailContainer.childRevealed {
 				// Sign up to intercept the completion of the dismissal
 				dismissalCompleteHandlerId = detailContainer.onNotify(handler: { [weak self] (widget, param) in
@@ -125,7 +122,6 @@ public class SideDetailController: WidgetController {
 		// Once the dismissal is complete, child-revealed will be updated
 		if let name = param.name, name == "child-revealed" {
 			detailContainer?.removeAllChildren()
-			debugPrint("Disposed of dismissed detail view")
 			if let detailContainer = detailContainer, let dismissalCompleteHandlerId = dismissalCompleteHandlerId {
 				signalHandlerDisconnect(instance: detailContainer, handlerID: dismissalCompleteHandlerId)
 			}
@@ -138,6 +134,7 @@ public class SideDetailController: WidgetController {
 		}
 		detailContainer.transitionType = .slideLeft
 		detailContainer.set(revealChild: true)
+		mainChild?.sideDetailControllerExpanded()
 	}
 
 	public func hideDetail() {
@@ -145,6 +142,19 @@ public class SideDetailController: WidgetController {
 			return
 		}
 		detailContainer.set(revealChild: false)
+		mainChild?.sideDetailControllerCollapsed()
+	}
+
+}
+
+public extension WidgetController {
+
+	func sideDetailControllerCollapsed() {
+		return
+	}
+
+	func sideDetailControllerExpanded() {
+		return
 	}
 
 }

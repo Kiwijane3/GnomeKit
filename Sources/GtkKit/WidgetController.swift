@@ -143,9 +143,6 @@ open class WidgetController {
 		if dismissModal() {
 			return;
 		}
-		if dismissDetailChild() {
-			return
-		}
 		if dismissMainChild() {
 			return;
 		}
@@ -158,14 +155,18 @@ open class WidgetController {
 		return false;
 	}
 
-	open func dismissDetailChild() -> Bool {
-		return false
-	}
-
 	/// Dismisses the main child, if one exists and the controller is capable of dismissing it. Returns whether the dismissal process should be terminated; Generally, this will be tre if a controller has been dismissed.
 	open func dismissMainChild() -> Bool {
 		// By default, controllers cannot dismiss their non-modal children.
 		return false;
+	}
+
+	open func dismissSecondary() -> Bool {
+		return false
+	}
+
+	open func dismissTertiary() -> Bool {
+		return false
 	}
 
 
