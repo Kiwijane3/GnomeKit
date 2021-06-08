@@ -143,6 +143,9 @@ open class WidgetController {
 		if dismissModal() {
 			return;
 		}
+		if dismissDetailChild() {
+			return
+		}
 		if dismissMainChild() {
 			return;
 		}
@@ -161,7 +164,7 @@ open class WidgetController {
 		return false;
 	}
 
-	open func dismissSecondary() -> Bool {
+	open func dismissDetailChild() -> Bool {
 		return false
 	}
 

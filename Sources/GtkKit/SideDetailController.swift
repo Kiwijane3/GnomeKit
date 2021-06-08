@@ -96,7 +96,7 @@ public class SideDetailController: WidgetController {
 
 	public var dismissalCompleteHandlerId: Int?
 
-	public override func dismissSecondary() -> Bool {
+	public override func dismissDetailChild() -> Bool {
 		guard let detailChild = secondaryChild else {
 			return false
 		}
