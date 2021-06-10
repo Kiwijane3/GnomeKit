@@ -8,7 +8,13 @@ public class SideDetailController: WidgetController {
 
 	public var primaryContainer: Box?
 
-	public var detailContainer: Revealer?
+	public var detailRevealer: Revealer?
+
+	public var detailStack: Stack?
+
+	public var detailWidget: Widget?
+
+	public var previousDetailWidget: Widget?
 
 	public override var mainChild: WidgetController? {
 		get {
@@ -39,15 +45,18 @@ public class SideDetailController: WidgetController {
 		self.primaryContainer = primaryContainer
 	    box.packStart(child: primaryContainer, expand: true, fill: true, padding: 0)
 	    box.packStart(child: Separator(orientation: .vertical), expand: false, fill: false, padding: 0)
-	    let detailContainer = Revealer()
-	    detailContainer.set(revealChild: false)
-	    self.detailContainer = detailContainer
-	    box.packEnd(child: detailContainer, expand: false, fill: false, padding: 0)
+	    let detailRevealer = Revealer()
+	    self.detailRevealer = detailRevealer
+	    detailRevealer.set(revealChild: false)
+	    let detailStack = Stack()
+	    self.detailStack = detailStack
+	    detailRevealer.add(widget: detailStack)
+	    box.packEnd(child: detailRevealer, expand: false, fill: false, padding: 0)
 		widget.showAll()
 		installPrimary()
 		installDetail()
 		if secondaryChild != nil {
-			detailContainer.set(revealChild: true)
+			detailRevealer.set(revealChild: true)
 		}
 	}
 
@@ -64,14 +73,13 @@ public class SideDetailController: WidgetController {
 
 	// Installs the detail child's widget into the detail controller. Does not alter the state of the revealer.
 	public func installDetail() {
-		guard let detailChild = secondaryChild, let detailContainer = detailContainer else {
+		guard let detailChild = secondaryChild, let detailStack = detailStack, let detailRevealer = detailRevealer else {
 			return
 		}
-		detailContainer.removeAllChildren()
-		detailContainer.add(widget: detailChild.widget)
-		detailChild.installedIn(self)
-		detailContainer.showAll()
-		parent?.mainUpdated()
+		previousDetailWidget = detailWidget
+		detailWidget = detailChild.widget
+		detailStack.add(widget: detailWidget!)
+		detailRevealer.showAll()
 	}
 
 	public override func show(_ controller: WidgetController) {
@@ -84,14 +92,54 @@ public class SideDetailController: WidgetController {
 	}
 
 	public override func showSecondaryViewController(_ controller: WidgetController) {
-		debugPrint("Secondary child: \(secondaryChild)")
 	 	if let secondaryChild = secondaryChild {
 	 		removeChild(secondaryChild)
 	 	}
 		addChild(controller)
 		secondaryChild = controller
 		installDetail()
+		transitionDetailChild()
 		displayDetail()
+	}
+
+	public var stackTransitionCompleteHandlerId: Int?
+
+	/// Transitions the detail stack to show the current detail widget.
+	private func transitionDetailChild() {
+		guard let detailRevealer = detailRevealer, let detailStack = detailStack, let detailWidget = detailWidget else {
+			return
+		}
+		// If the revealer is currently hidden, then we just set the child without animation, since the revealer will likely perform a transition itself.
+		print(detailRevealer.childRevealed)
+		if !detailRevealer.childRevealed {
+			detailStack.transitionType = .none
+			detailStack.setVisible(child: detailWidget)
+			cleanupPreviousDetailWidget()
+		} else {
+			stackTransitionCompleteHandlerId = detailStack.onNotify(handler: { [weak self] (widget, param) in
+				self?.stackTransitionCompleteOnNotify(param: param)
+			})
+			detailStack.transitionType = .overLeft
+			detailStack.setVisible(child: detailWidget)
+		}
+	}
+
+	public func stackTransitionCompleteOnNotify(param: ParamSpecRef) {
+		if let name = param.name, name == "transition-running", detailStack!.transitionRunning == false {
+			cleanupPreviousDetailWidget()
+			if let detailStack = detailStack, let dismissalCompleteHandlerId = dismissalCompleteHandlerId {
+				signalHandlerDisconnect(instance: detailStack, handlerID: dismissalCompleteHandlerId)
+			}
+		}
+	}
+
+	private func cleanupPreviousDetailWidget() {
+		guard let detailStack = detailStack, previousDetailWidget != nil else {
+			return
+		}
+		detailStack.remove(widget: previousDetailWidget!)
+		previousDetailWidget = nil
+		print("Cleaned up detail widget")
 	}
 
 	public var dismissalCompleteHandlerId: Int?
@@ -100,17 +148,17 @@ public class SideDetailController: WidgetController {
 		guard let detailChild = secondaryChild else {
 			return false
 		}
-		if let detailContainer = detailContainer {
+		if let detailRevealer = detailRevealer {
 			// Remove the detail child and remove its widget from the revealer once the revealer is collapsed.
-			if detailContainer.childRevealed {
+			if detailRevealer.childRevealed {
 				// Sign up to intercept the completion of the dismissal
-				dismissalCompleteHandlerId = detailContainer.onNotify(handler: { [weak self] (widget, param) in
+				dismissalCompleteHandlerId = detailRevealer.onNotify(handler: { [weak self] (widget, param) in
 					self?.dismissalCompleteOnNotify(param: param)
 				})
 				hideDetail()
 				removeChild(detailChild)
 			} else {
-				detailContainer.removeAllChildren()
+				detailRevealer.removeAllChildren()
 				removeChild(detailChild)
 			}
 		}
@@ -121,24 +169,24 @@ public class SideDetailController: WidgetController {
 	public func dismissalCompleteOnNotify(param: ParamSpecRef) {
 		// Once the dismissal is complete, child-revealed will be updated
 		if let name = param.name, name == "child-revealed" {
-			detailContainer?.removeAllChildren()
-			if let detailContainer = detailContainer, let dismissalCompleteHandlerId = dismissalCompleteHandlerId {
-				signalHandlerDisconnect(instance: detailContainer, handlerID: dismissalCompleteHandlerId)
+			detailStack?.removeAllChildren()
+			if let detailRevealer = detailRevealer, let dismissalCompleteHandlerId = dismissalCompleteHandlerId {
+				signalHandlerDisconnect(instance: detailRevealer, handlerID: dismissalCompleteHandlerId)
 			}
 		}
 	}
 
 	public func displayDetail() {
-		guard let detailContainer = detailContainer, let detailChild = secondaryChild else {
+		guard let detailRevealer = detailRevealer, let detailChild = secondaryChild else {
 			return
 		}
-		detailContainer.transitionType = .slideLeft
-		detailContainer.set(revealChild: true)
+		detailRevealer.transitionType = .slideLeft
+		detailRevealer.set(revealChild: true)
 		mainChild?.onWidgetReallocated()
 	}
 
 	public func hideDetail() {
-		guard let detailContainer = detailContainer, let detailChild = secondaryChild else {
+		guard let detailContainer = detailRevealer, let detailChild = secondaryChild else {
 			return
 		}
 		detailContainer.set(revealChild: false)

@@ -11,17 +11,13 @@ public extension WidgetProtocol {
 	}
 
 	func child<T: Widget>(named name: String, of type: T.Type) -> T! {
-		print("child(named:of:)")
-		debugPrint("Called child on \(self.name)")
 		if self.name == name {
 			return T(retainingRaw: ptr)
 		}
 		if isAContainer() {
 			let containerRef = ContainerRef(raw: ptr)
 			// Children returns a nil pointer if there are no children.
-			print("Searching Container")
 			if let children = containerRef.children {
-				print("Searching child")
 				for ptr in children {
 					if let result = WidgetRef(raw: ptr).child(named: name, of: type) {
 						return result
