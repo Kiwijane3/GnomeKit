@@ -10,6 +10,7 @@ public class CollectionTestController: CollectionWidgetController<String, String
 
 	public override func widgetDidLoad() {
 		print(isDarkTheme())
+		headerbarItem.title = "Collection Test"
 		headerbarItem.endItems = [
 			BarButtonItem(iconName: "list-add-symbolic", onClick: { [weak self] (button) in
 				print("\(self?.sideDetailController?.detailRevealer?.childRevealed)")
@@ -51,7 +52,8 @@ public class CollectionTestController: CollectionWidgetController<String, String
 
 	public override func activate(in section: Int, at index: Int) {
 	    let controller = LabelController(text: "\(section):\(index)")
-	    showSecondaryViewController(controller)
+	    print("Presenting")
+	    show(controller)
 	}
 
 }

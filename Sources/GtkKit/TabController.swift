@@ -20,14 +20,6 @@ open class TabController: WidgetController {
 		}
 	}
 
-	public var tabHeaderbarSupplier: TabHeaderbarSupplier!;
-
-	public override var headerbarSupplier: HeaderbarSupplier {
-		get {
-			return tabHeaderbarSupplier;
-		}
-	}
-
 	public override var mainChild: WidgetController? {
 		get {
 			for child in children {
@@ -41,13 +33,11 @@ open class TabController: WidgetController {
 
 	public override init() {
 		super.init();
-		tabHeaderbarSupplier = TabHeaderbarSupplier(tabController: self);
 	}
 
 	public init(children: [WidgetController]) {
 		super.init();
 		self.children = children;
-		tabHeaderbarSupplier = TabHeaderbarSupplier(tabController: self);
 		for child in children {
 			child.parent = self;
 		}
@@ -138,7 +128,6 @@ open class TabController: WidgetController {
 	}
 
 	public override func mainUpdated() {
-		tabHeaderbarSupplier.itemUpdated();
 		parent?.mainUpdated();
 	}
 
@@ -159,68 +148,5 @@ public class TabItem {
 	}
 
 	public var onUpdate: (() -> Void)?;
-
-}
-
-public class TabHeaderbarSupplier: HeaderbarSupplier {
-
-	public unowned var tabController: TabController;
-
-	public var item: HeaderbarItem?;
-
-	public var title: String? {
-		get {
-			return item?.title;
-		}
-	}
-
-	public var subtitle: String? {
-		get {
-			return item?.subtitle;
-		}
-	}
-
-	public var titleView: Widget? {
-		return tabController.switcher;
-	}
-
-	public var startItemCount: Int {
-		get {
-			return item?.startItemCount ?? 0;
-		}
-	}
-
-	public var endItemCount: Int {
-		get {
-			return item?.endItemCount ?? 0;
-		}
-	}
-
-	public var showsBackButton: Bool {
-		return item?.showsBackButton ?? false
-	}
-
-	public var onUpdate: ((HeaderField) -> Void)?;
-
-	public init(tabController: TabController) {
-		self.tabController = tabController;
-		itemUpdated();
-	}
-
-	public func itemUpdated() {
-		item?.onUpdate = nil;
-		item = tabController.mainChild?.headerbarItem;
-		item?.onUpdate = { [weak self] (field) in
-			self?.onUpdate?(field);
-		}
-	}
-
-	public func startItem(at index: Int) -> BarItem {
-		return item!.startItem(at: index);
-	}
-
-	public func endItem(at index: Int) -> BarItem {
-		return item!.endItem(at: index);
-	}
 
 }

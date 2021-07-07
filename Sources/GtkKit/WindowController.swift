@@ -8,61 +8,33 @@
 import Foundation
 import Gtk
 
-open class WindowController: HeaderController {
+open class WindowController: PresentationController {
 	
-	public var application: Application;
-	
-	public var hasHeaderbar: Bool = true;
-	
-	public override var mainChild: WidgetController? {
+	public var window: Window {
 		get {
-			return children.last
+			return container as! Window;
 		}
 	}
 	
-	public var window: WindowProtocol {
-		get {
-			return widget as! WindowProtocol;
-		}
+	public override var canShowHeaderBar: Bool {
+		return true
 	}
 	
-	public init(application: Application) {
-		self.application = application;
-		super.init();
-		headerBar.showCloseButton = true
+	public override init() {
+		super.init()
+		showsHeaderbar = true
 	}
 	
-	public override func loadWidget() {
-		widget = ApplicationWindow(application: application);
-		// Install the headerbar if needed.
-		if hasHeaderbar {
-			window.set(titlebar: headerBar);
-		}
-		window.setDefaultSize(width: 1024, height: 680)
-		window.showAll()
+	open override func showHeaderbar() {
+		window.set(titlebar: headerbarStack)
 	}
 	
-	public override func show(_ controller: WidgetController) {
-		addChild(controller);
-		window.add(widget: controller.widget);
-		window.showAll();
-		controller.installedIn(self);
-		mainUpdated();
+	open override func hideHeaderbar() {
+		window.set(titlebar: nil)
 	}
 	
-	/// WindowController allows controllers to be shown over each other and dismissed, but will not dismiss its only child.
-	public override func dismissMainChild() -> Bool {
-		if children.count > 1 {
-			let removedController = children.popLast()!;
-			removedController.removedFromParent();
-			let mainController = children.last!;
-			window.add(widget: mainController.widget);
-			mainController.installedIn(self);
-			window.showAll();
-			return true;
-		} else {
-			return false;
-		}
+	open override func endPresentation() {
+		window.close()
 	}
 	
 }

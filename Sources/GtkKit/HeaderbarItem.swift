@@ -17,65 +17,30 @@ public enum HeaderField {
 	case showsBackButton
 }
 
-public protocol HeaderbarSupplier: class {
+public class HeaderbarItem: Equatable, Hashable {
 	
-	var title: String? {
-		get
-	}
 	
-	var subtitle: String? {
-		get
-	}
-	
-	var titleView: Widget? {
-		get
-	}
-	
-	var startItemCount: Int {
-		get
-	}
-	
-	var endItemCount: Int {
-		get
-	}
-	
-	var showsBackButton: Bool {
-		get
-	}
-	
-	var onUpdate: ((HeaderField) -> Void)? {
-		get
-		set
-	}
-	
-	func startItem(at index: Int) -> BarItem;
-	
-	func endItem(at index: Int) -> BarItem;
-	
-}
+	public var uuid: UUID = UUID()
 
-public class HeaderbarItem: HeaderbarSupplier {
-	
-	
 	public var title: String? = nil {
 		didSet {
 			print("Set title to \(title)")
-			onUpdate?(.title);
+			onUpdate?(.title)
 		}
 	}
 	
 	public var subtitle: String? = nil {
 		didSet {
-			onUpdate?(.subtitle);
+			onUpdate?(.subtitle)
 		}
 	}
 	
 	public var titleView: Widget? = nil {
 		didSet {
-			onUpdate?(.titleView);
+			onUpdate?(.titleView)
 		}
 	}
-	
+
 	public var startItems: [BarItem] = [] {
 		didSet {
 			onUpdate?(.startItems)
@@ -84,61 +49,65 @@ public class HeaderbarItem: HeaderbarSupplier {
 	
 	public var leftItems: [BarItem] {
 		get {
-			return startItems;
+			return startItems
 		}
 		set {
-			startItems = newValue;
+			startItems = newValue
 		}
 	}
 	
 	public var endItems: [BarItem] = [] {
 		didSet {
-			onUpdate?(.endItems);
+			onUpdate?(.endItems)
 		}
 	}
 	
 	public var rightItems: [BarItem] {
 		get {
-			return endItems;
+			return endItems
 		}
 		set {
-			endItems = newValue;
+			endItems = newValue
 		}
 	}
 	
 	public var showsBackButton: Bool = true {
 		didSet {
-			onUpdate?(.showsBackButton);
+			onUpdate?(.showsBackButton)
 		}
 	}
 	
-	public var onUpdate: ((HeaderField) -> Void)?;
+	public var onUpdate: ((HeaderField) -> Void)?
 	
 	public var startItemCount: Int {
 		get {
-			return startItems.count;
+			return startItems.count
 		}
 	}
 	
 	public var endItemCount: Int {
 		get {
-			return endItems.count;
+			return endItems.count
 		}
 	}
 	
-	public func startItem(at index: Int) -> BarItem {
-		return startItems[index];
+	public func getSupplementaryItem() -> BarItem? {
+		return nil
+	}
+
+	public static func ==(a: HeaderbarItem, b: HeaderbarItem) -> Bool{
+		return a.uuid == b.uuid
 	}
 	
-	public func endItem(at index: Int) -> BarItem {
-		return endItems[index];
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(uuid)
 	}
 	
 }
 
 public protocol BarItem {
 	
-	func generate() -> Widget;
+	func getWidget() -> Widget
 	
 }
 
@@ -146,53 +115,53 @@ public class BarButtonItem: BarItem{
 	
 	public var title: String? {
 		didSet {
-			loadTitle();
+			loadTitle()
 		}
 	}
 	
 	public var iconName: String? {
 		didSet {
-			loadIcon();
+			loadIcon()
 		}
 	}
 	
 	public var onClick: ((ButtonProtocol) -> Void)? {
 		didSet {
-			loadHandler();
+			loadHandler()
 		}
 	}
 	
-	internal var button: Button?;
+	internal var button: Button?
 	
-	internal var signalId: Int?;
+	internal var signalId: Int?
 	
 	public init(title: String? = nil, iconName: String? = nil, onClick: ((ButtonProtocol) -> Void)? = nil) {
-		self.title = title;
-		self.iconName = iconName;
-		self.onClick = onClick;
+		self.title = title
+		self.iconName = iconName
+		self.onClick = onClick
 	}
 	
-	public func generate() -> Widget {
+	public func getWidget() -> Widget {
 		if let button = button {
-			return button;
+			return button
 		} else {
-			button = Button();
-			loadTitle();
-			loadIcon();
-			loadHandler();
-			return button!;
+			button = Button()
+			loadTitle()
+			loadIcon()
+			loadHandler()
+			return button!
 		}
 	}
 	
 	public func loadTitle() {
-		button?.label = title;
+		button?.label = title
 	}
 	
 	public func loadIcon() {
 		if let iconName = iconName {
-			button?.set(image: Image(iconName: iconName, size: .button));
+			button?.set(image: Image(iconName: iconName, size: .button))
 		} else {
-			button?.image = nil;
+			button?.image = nil
 		}
 	}
 	
@@ -203,8 +172,8 @@ public class BarButtonItem: BarItem{
 			})
 		} else {
 			if let signalId = signalId {
-				button?.signalHandlerDisconnect(handlerID: signalId);
-				self.signalId = nil;
+				button?.signalHandlerDisconnect(handlerID: signalId)
+				self.signalId = nil
 			}
 		}
 	}

@@ -25,4 +25,8 @@ public class LabelController: WidgetController {
 		widget = grid
 	}
 
+	public override func widgetDidLoad() {
+		headerbarItem.title = "Label"
+	}
+
 }

@@ -27,8 +27,7 @@ public class SectionedListTestController: SectionedListController<String, String
 	}
 	
 	public override func activate(in section: Int, at index: Int) {
-	    print("Activated at \(index) in \(section)")
-	    navigationController?.push((SelectedController(display: "Selected item at \(index) in \(section)")))
+	   present(SelectedController(display: "Selected item at \(index) in \(section)"))
 	}
 	
 }

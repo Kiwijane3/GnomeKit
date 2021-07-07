@@ -120,8 +120,23 @@ open class WidgetController {
 		parent?.showTertiaryViewController(controller)
 	}
 
+	open func present(_ controller: PresentationController) {
+		presentedController = controller
+		controller.beginPresentation()
+	}
+
 	/// Presents the controller modally, such as in a popup or popover. The display is controlled by the controller's ModalPresentation, if present; Otherwise, presentation is handled by the presenter.
-	open func present(_ controller: WidgetController) {}
+	open func present(_ controller: WidgetController) {
+		addChild(controller)
+		print("Added child")
+		presentedController = createPresentationController(for: controller.presentation)
+		print("Created presentation controller: \(presentedController)")
+		presentedController!.presentingController = self
+		presentedController!.install(controller: controller)
+		print("Installed controller in presentation controller")
+		presentedController!.beginPresentation()
+		print("Presented")
+	}
 
 	private var _presentation: ModalPresentation?;
 
@@ -131,10 +146,28 @@ open class WidgetController {
 			if let _presentation = _presentation {
 				return _presentation;
 			} else {
-				let presentation = ModalPresentation();
-				_presentation = presentation;
-				return presentation;
+				let presentation = ModalPresentation()
+				_presentation = presentation
+				return presentation
 			}
+		}
+	}
+
+	public var presentedController: PresentationController?
+
+	private var _presentingController: PresentationController?
+
+	public var presentingController: PresentationController? {
+		get {
+			if let presentingController = _presentingController {
+				return presentingController
+			}
+			else {
+				return parent?.presentingController
+			}
+		}
+		set {
+			_presentingController = newValue
 		}
 	}
 
@@ -154,8 +187,15 @@ open class WidgetController {
 
 	/// Dismisses the modal controller, if there is one. Returns whether the dismissal process should be terminated; Generally, this will be true if a controller has been dismissed.
 	open func dismissModal() -> Bool {
-		// TODO:- Implement modal dismissal.
-		return false;
+		guard let presentedController = presentedController else {
+			return false
+		}
+		presentedController.endPresentation()
+		if let dismissedWidgetController = presentedController.presentedController {
+			removeChild(dismissedWidgetController)
+		}
+		self.presentedController = nil
+		return true
 	}
 
 	/// Dismisses the main child, if one exists and the controller is capable of dismissing it. Returns whether the dismissal process should be terminated; Generally, this will be tre if a controller has been dismissed.
@@ -176,9 +216,21 @@ open class WidgetController {
 	// MARK:- Controller Hierarchy
 
 	/// The main child of this controller. For most controllers, this is just self. For container controllers, it is the most prominent child, such as the currently displayed child of a NavigationController, or the Central child of a PanedController.
+	/// The headerbarItem of the main child will be displayed in the headerbar by the presenting controller
 	open var mainChild: WidgetController? {
 		get {
 			return self
+		}
+	}
+
+	/// Traverses the main child chain to fetch the final controller in this chain. This will generally be the active controller.
+	public var ultimateChild: WidgetController? {
+		get {
+			if mainChild === self {
+				return self
+			} else {
+				return mainChild?.ultimateChild
+			}
 		}
 	}
 
@@ -194,13 +246,17 @@ open class WidgetController {
 	/// The direct ancestor of this controller.
 	public var parent: WidgetController?;
 
+	/// Returns the most recent window controller
 	public var windowController: WindowController? {
-		var current = parent
-		while let ancestor = current {
-			if let windowController = ancestor as? WindowController {
+		// Check the most recent presenting controller
+		var presentingController = presentingController
+		while presentingController != nil {
+			// If it is a window controller, return that
+			if let windowController = presentingController as? WindowController {
 				return windowController
 			}
-			current = ancestor.parent
+			// Else, check the presenting controller of the controller the presented the most recent presentation.
+			presentingController = presentingController!.presentingController?.presentingController
 		}
 		return nil
 	}
@@ -245,6 +301,7 @@ open class WidgetController {
 	open func addChild(_ controller: WidgetController) {
 		children.append(controller);
 		controller.parent = self;
+		print("Added child")
 	}
 
 	open func removeChild(_ controller: WidgetController) {
@@ -274,18 +331,43 @@ open class WidgetController {
 		return
 	}
 
-	// MARK:- Items for container controllers
+	// MARK:- Items for headerbars
 
-	/// The HeaderbarItem to be displayed from this controller.
+	/// The HeaderbarItem specifies items to be displayed in the header bar when the controller is the main child
 	public var headerbarItem: HeaderbarItem = HeaderbarItem();
 
-	/// The headerbar supplier for this controller. This is usually the headerBar item, but container controllers may supply a wrapper for their main child's item in order to their own controls, like back buttons or stack switchers.
-	open var headerbarSupplier: HeaderbarSupplier {
+	public var headerbarItems: Set<HeaderbarItem> {
 		get {
-			return headerbarItem;
+			var items: Set = [headerbarItem]
+			for child in children {
+				items.formUnion(child.headerbarItems)
+			}
+			return items
 		}
 	}
 
-	public var tabItem: TabItem = TabItem();
+	/// The tab item can be used to specify the title and image used to identify the controller in a tab controller.
+	public var tabItem: TabItem = TabItem()
+
+	/// The supplementary item is displayed alongside the main child's item contents in the header, and is used by container controllers to provide controls for modifying the container state, such as the back button of a navigation controller.
+	public var supplementaryItem: BarItem? {
+		get {
+			return nil
+		}
+	}
+
+	/// Resolves the supplementaryItem to be displayed. This will be supplementary item of the deepest controller in the main chain with a defined item. Container controllers should not provide supplementary items in their base state so that their ancestors can dismiss them.
+	public func resolveSupplementaryItem() -> BarItem? {
+		if mainChild === self {
+			return supplementaryItem
+		} else {
+			return mainChild?.resolveSupplementaryItem() ?? self.supplementaryItem
+		}
+	}
+
+	/// This method causes the presenting controller to update the state of the headerbar.
+	public func headerNeedsRefresh() {
+		presentingController?.refreshHeader()
+	}
 
 }

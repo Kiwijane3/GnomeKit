@@ -3,6 +3,8 @@ import Gtk
 import GtkKit
 
 Application.run(startupHandler: nil) { (app) in
-	let windowController = WindowController(application: Application(app))
-	windowController.show(SideDetailController(primaryChild: NavigationController(withRoot: CollectionTestController())))
+	let windowController = MainWindowController(application: Application(app))
+	windowController.install(controller: NavigationController(withRoot: CollectionTestController()))
+	windowController.beginPresentation()
+	print("Presented root")
 }

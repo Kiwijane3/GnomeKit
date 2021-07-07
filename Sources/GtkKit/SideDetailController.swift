@@ -22,12 +22,6 @@ public class SideDetailController: WidgetController {
 		}
 	}
 
-	public override var headerbarSupplier: HeaderbarSupplier {
-		get {
-			primaryChild?.headerbarSupplier ?? self.headerbarItem
-		}
-	}
-
 	public init(primaryChild: WidgetController, detailChild: WidgetController? = nil) {
 		super.init()
 		addChild(primaryChild)
