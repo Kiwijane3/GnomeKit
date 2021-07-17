@@ -4,8 +4,6 @@ import Gtk
 
 public class SideDetailController: WidgetController {
 
-	public var primaryChild: WidgetController?
-
 	public var primaryContainer: Box?
 
 	public var detailRevealer: Revealer?

@@ -33,6 +33,15 @@ open class WindowController: PresentationController {
 		window.set(titlebar: nil)
 	}
 	
+	open override func beginPresentation() {
+		if canShowHeaderBar, showsHeaderbar {
+			showHeaderbar()
+		}
+		refreshHeader()
+		container.showAll()
+		presentedController?.presentingController = self
+	}
+
 	open override func endPresentation() {
 		window.close()
 	}

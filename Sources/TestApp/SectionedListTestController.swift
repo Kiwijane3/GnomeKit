@@ -10,8 +10,28 @@ public class SectionedListTestController: SectionedListController<String, String
 
 	public override func widgetDidLoad() {
 		headerbarItem.title = "Test List"
-		setSections(to: ["First Section"])
-		setItems(to: ["First Item", "Second Section"], in: "First Section")
+		setSections(to: [
+			"First Section",
+			"Second Section"
+		])
+		setItems(to: [
+			"First Item",
+			"Second Item",
+			"Third item",
+			"Fourth Item",
+			"Fifth Item",
+			"Sixth Item",
+			"Seventh Item",
+			"Eighth Item",
+			"Ninth Item",
+			"Tenth item"
+		], in: "First Section")
+		setItems(to: [
+			"First item",
+			"Second Item",
+			"Third Item",
+			"Fourth Item"
+		], in: "Second Section")
 	}
 	
 	public override func generateWidget(for item: String) -> Widget {
@@ -27,7 +47,9 @@ public class SectionedListTestController: SectionedListController<String, String
 	}
 	
 	public override func activate(in section: Int, at index: Int) {
-	   present(SelectedController(display: "Selected item at \(index) in \(section)"))
+		let controller = LabelController(text: "\(section):\(index)")
+		print("parent: \(parent)")
+		showSecondaryViewController(controller)
 	}
 	
 }

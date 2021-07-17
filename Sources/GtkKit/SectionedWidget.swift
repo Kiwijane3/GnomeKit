@@ -37,6 +37,7 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		box.marginStart = 8
 		marginEnd = 8
 		box.halign = .center
+		propagateNaturalWidth = true
 		setup()
 	}
 	
@@ -51,6 +52,7 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		box.marginStart = 8
 		box.marginEnd = 8
 		box.halign = .center
+		propagateNaturalWidth = true
 		setup()
 	}
 	
@@ -65,6 +67,7 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		box.marginStart = 8
 		box.marginEnd = 8
 		box.halign = .center
+		propagateNaturalWidth = true
 		setup()
 	}
 

@@ -12,8 +12,6 @@ import GLibObject
 
 open class TabController: WidgetController {
 
-	public var switcher: StackSwitcher?;
-
 	public var stack: Stack {
 		get {
 			return widget as! Stack;
@@ -45,12 +43,16 @@ open class TabController: WidgetController {
 
 	public override func loadWidget() {
 		widget = Stack()
-		switcher = StackSwitcher()
-		switcher?.set(stack: stack)
 		for i in 0..<children.count {
 			addToStack(children[i], at: i)
 		}
-		stack.transitionType = .crossfade
+		stack.transitionType = .overLeftRight
+		headerSwitcherItem = CustomWidgetBarItem() { [unowned self] () -> StackSwitcher in
+			let switcher = StackSwitcher()
+			switcher.set(stack: stack)
+			return switcher
+		}
+
 	}
 
 	public override func addChild(_ controller: WidgetController) {

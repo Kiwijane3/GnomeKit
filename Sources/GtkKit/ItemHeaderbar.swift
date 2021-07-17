@@ -6,18 +6,16 @@
 //
 
 import Foundation
+import GLibObject
 import Gtk
 
 /// The ItemHeaderBar is a headerbar that is extended
 open class ItemHeaderbar: HeaderBar {
 
+	private var contextIdentifier = UUID()
+
 	// The headerbar item is used by widget controllers to specify the items shown alongside them in the headerbar.
-	public var item: HeaderbarItem? {
-		didSet {
-			oldValue?.onUpdate = nil
-			loadItems()
-		}
-	}
+	public let item: HeaderbarItem?
 
 	// The supplementary item is provided by container controls to display a control alongside the items specified in the headerbar item to provide container controls, like a back button.
 	public var supplementaryItem: BarItem? {
@@ -26,7 +24,22 @@ open class ItemHeaderbar: HeaderBar {
 		}
 	}
 
-	public init(item: HeaderbarItem) {
+	public var switcherItem: BarItem? {
+		didSet {
+			loadTitleWidget()
+		}
+	}
+
+	private var supplementaryWidget: Widget?
+
+	private var switcherWidget: Widget?
+
+	private var startWidgets: [Widget] = []
+
+	private var endWidgets: [Widget] = []
+
+	/// ItemHeaderbar binds the allocatedWidth property on widget to its own width request
+	public init(item: HeaderbarItem?) {
 		self.item = item
 		super.init()
 		load()
@@ -34,11 +47,14 @@ open class ItemHeaderbar: HeaderBar {
 	}
 
 	public required init(raw: UnsafeMutableRawPointer) {
+		item = nil
 		super.init(raw: raw)
 	}
 
 	public required init(retainingRaw raw: UnsafeMutableRawPointer) {
+		item = nil
 		super.init(retainingRaw: raw)
+
 	}
 
 	public func load() {
@@ -48,9 +64,9 @@ open class ItemHeaderbar: HeaderBar {
 		removeAllChildren()
 		loadTitle();
 		loadSubtitle();
-		loadTitleView();
+		loadTitleWidget();
 		loadItems();
-		item.onUpdate = { [weak self] (field) in
+		item.onUpdate(for: contextIdentifier) { [weak self] (field) in
 			debugPrint("Headerbar supplier field \(field) was updated, updated headerbar to reflect state")
 			switch field {
 			case .title:
@@ -58,7 +74,7 @@ open class ItemHeaderbar: HeaderBar {
 			case .subtitle:
 				self?.loadSubtitle();
 			case .titleView:
-				self?.loadTitleView();
+				self?.loadTitleWidget();
 			case .startItems, .endItems:
 				debugPrint("Loading items")
 				self?.loadItems();
@@ -85,8 +101,11 @@ open class ItemHeaderbar: HeaderBar {
 		}
 	}
 
-	public func loadTitleView() {
-		if let titleView = item?.titleView {
+	public func loadTitleWidget() {
+		switcherWidget = switcherItem?.getWidget(for: contextIdentifier)
+		if let switcherWidget = switcherWidget {
+			customTitle = WidgetRef(switcherWidget.widget_ptr)
+		} else if let titleView = item?.titleView {
 			customTitle = WidgetRef(titleView.widget_ptr);
 		} else {
 			customTitle = nil;
@@ -95,17 +114,22 @@ open class ItemHeaderbar: HeaderBar {
 
 	public func loadItems() {
 		removeAllChildren()
-		if let supplementaryWidget = supplementaryItem?.getWidget() {
+		supplementaryWidget = supplementaryItem?.getWidget(for: contextIdentifier)
+		if let supplementaryWidget = supplementaryWidget {
 			print("Supplementary widget: \(supplementaryWidget)")
 			packStart(child: supplementaryWidget)
 		}
 		if let item = item {
-			for barItem in item.startItems {
-				let widget = barItem.getWidget();
+			startWidgets = item.startItems.map() { (barItems) -> Widget in
+				return barItems.getWidget(for: contextIdentifier)
+			}
+			for widget in startWidgets {
 				packStart(child: widget);
 			}
-			for barItem in item.endItems {
-				let widget = barItem.getWidget();
+			endWidgets = item.endItems.map() { (barItems) -> Widget in
+				return barItems.getWidget(for: contextIdentifier)
+			}
+			for widget in endWidgets {
 				packEnd(child: widget);
 			}
 		}

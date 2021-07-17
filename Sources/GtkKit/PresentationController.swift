@@ -43,9 +43,9 @@ open class PresentationController {
 	/// A variable to determining whether the headerbar should be displayed, if possible
 	public var showsHeaderbar: Bool = true {
 		didSet {
-			if showsHeaderbar, !oldValue {
+			if canShowHeaderBar, showsHeaderbar, !oldValue {
 				showHeaderbar()
-			} else if !showsHeaderbar, oldValue {
+			} else if canShowHeaderBar, !showsHeaderbar, oldValue {
 				hideHeaderbar()
 				_headerbarStack = nil
 			}
@@ -53,12 +53,7 @@ open class PresentationController {
 	}
 
 	open func beginPresentation() {
-		if canShowHeaderBar, showsHeaderbar {
-			showHeaderbar()
-		}
-		refreshHeader()
-		container.showAll()
-		presentedController?.presentingController = self
+
 	}
 
 	open func endPresentation() {
@@ -76,13 +71,14 @@ open class PresentationController {
 	open func install(controller: WidgetController) {
 		presentedController = controller
 		installContent()
+		setupHeader()
+		refreshHeader()
 	}
 
 	open func installContent() {
 		guard let presentedController = presentedController else {
 			return
 		}
-		print("installContext(): Post-guard")
 		container.add(widget: presentedController.widget)
 	}
 
@@ -94,12 +90,18 @@ open class PresentationController {
 
 	}
 
+	open func setupHeader() {
+		guard let headerbarStack = headerbarStack else {
+			return
+		}
+		headerbarStack.setupComplexHeaderbar(using: presentedController?.setupComplexHeaderbar())
+	}
+
 	open func refreshHeader() {
 		guard let headerbarStack = headerbarStack else {
 			return
 		}
-		print(presentedController?.ultimateChild)
-		headerbarStack.update(with: presentedController?.headerbarItems ?? [], main: presentedController?.ultimateChild?.headerbarItem, supplementaryItem: presentedController?.resolveSupplementaryItem())
+		headerbarStack.update(with: presentedController?.headerbarState())
 	}
 
 	public func ancestor<T: PresentationController>(ofType type: T.Type) -> T? {

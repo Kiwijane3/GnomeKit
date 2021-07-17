@@ -62,6 +62,7 @@ open class WidgetController {
 	public func loadWidgetFromBuilder() -> Bool {
 		debugPrint("Attempting to load from builder")
 		guard let widgetName = widgetName else {
+			print("Could not load")
 			return false
 		}
 		guard let bundle = bundle else {
@@ -109,7 +110,6 @@ open class WidgetController {
 	open func show(_ controller: WidgetController) {
 		parent?.show(controller)
 	}
-
 	/// Present the controller in a detail context, such as the left pane of a PanedController. This is a no-op for many controllers.
 	open func showSecondaryViewController(_ controller: WidgetController) {
 		parent?.showSecondaryViewController(controller)
@@ -122,6 +122,7 @@ open class WidgetController {
 
 	open func present(_ controller: PresentationController) {
 		presentedController = controller
+		controller.presentingController = self
 		controller.beginPresentation()
 	}
 
@@ -219,29 +220,31 @@ open class WidgetController {
 	/// The headerbarItem of the main child will be displayed in the headerbar by the presenting controller
 	open var mainChild: WidgetController? {
 		get {
-			return self
+			return nil
 		}
 	}
 
 	/// Traverses the main child chain to fetch the final controller in this chain. This will generally be the active controller.
 	public var ultimateChild: WidgetController? {
 		get {
-			if mainChild === self {
-				return self
-			} else {
-				return mainChild?.ultimateChild
-			}
+			return mainChild?.ultimateChild ?? self
+		}
+	}
+
+	open var primaryChild: WidgetController?
+
+	/// The secondary child of this controller, if any.
+	open var secondaryChild: WidgetController? {
+		didSet {
+			print("secondaryChild set to \(secondaryChild)")
 		}
 	}
 
 	/// The secondary child of this controller, if any.
-	open var secondaryChild: WidgetController?;
-
-	/// The secondary child of this controller, if any.
-	open var tertiaryChild: WidgetController?;
+	open var tertiaryChild: WidgetController?
 
 	/// The controller currently being modally presented by this controller.
-	open var modallyPresented: WidgetController?;
+	open var modallyPresented: WidgetController?
 
 	/// The direct ancestor of this controller.
 	public var parent: WidgetController?;
@@ -288,6 +291,17 @@ open class WidgetController {
 		while let ancestor = current {
 			if let sideDetailController = ancestor as? SideDetailController {
 				return sideDetailController
+			}
+			current = ancestor.parent
+		}
+		return nil
+	}
+
+	public var splitWidgetController: SplitWidgetController? {
+		var current = parent
+		while let ancestor = current {
+			if let splitWidgetController = ancestor as? SplitWidgetController {
+				return splitWidgetController
 			}
 			current = ancestor.parent
 		}
@@ -356,6 +370,8 @@ open class WidgetController {
 		}
 	}
 
+	public var headerSwitcherItem: BarItem?
+
 	/// Resolves the supplementaryItem to be displayed. This will be supplementary item of the deepest controller in the main chain with a defined item. Container controllers should not provide supplementary items in their base state so that their ancestors can dismiss them.
 	public func resolveSupplementaryItem() -> BarItem? {
 		if mainChild === self {
@@ -365,9 +381,28 @@ open class WidgetController {
 		}
 	}
 
+	public func resolveHeaderSwitcherItem() -> BarItem? {
+		return headerSwitcherItem ?? mainChild?.resolveHeaderSwitcherItem()
+	}
+
 	/// This method causes the presenting controller to update the state of the headerbar.
 	public func headerNeedsRefresh() {
 		presentingController?.refreshHeader()
+	}
+
+	/// Provides the state to be displayed in the headerbar. Controllers should only need to control this if they can display a complex headerbar when displayed as the root of a presentation context.
+	/// If your custom class overrides setupComplexHeader, then it probably needs to override this.
+	open func headerbarState() -> HeaderbarState {
+		return .simple(items: headerbarItems ?? [], main: ultimateChild?.headerbarItem, supplementaryItems: resolveSupplementaryItem(), switcherItem: resolveHeaderSwitcherItem())
+	}
+
+	/// This function can be overridden to provide a complex headerbar, such as a split headerbar, to be used when the controller is displayed as the root of a presentation context
+	/// The first returned element is the widget to be placed in the headerbar.
+	/// The second returned element is a list of headerbarstacks to which complex headerbar updates are delegated.
+	/// The first element of each parameter is provided to the first headerbar displayed here, the second to the second, and so on.
+	/// If you need to update this configuration after the presentation begins, call presentingController.refreshHeaderbarSetup()
+	open func setupComplexHeaderbar() -> (Widget, [HeaderbarStack])? {
+		return nil
 	}
 
 }

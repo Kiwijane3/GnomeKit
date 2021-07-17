@@ -13,11 +13,20 @@ public class CollectionTestController: CollectionWidgetController<String, String
 		headerbarItem.title = "Collection Test"
 		headerbarItem.endItems = [
 			BarButtonItem(iconName: "list-add-symbolic", onClick: { [weak self] (button) in
-				print("\(self?.sideDetailController?.detailRevealer?.childRevealed)")
+				let alert = AlertController(title: "Test Dialog", message: "This is a test dialog")
+				alert.addAction(AlertAction(title: "Cancel"))
+				alert.addAction(AlertAction(title: "Suggested", style: .suggested) { (_) in
+					print("Did suggested action")
+				})
+				alert.addEntry(configurationHandler: { (entry) in
+					entry.placeholderText = "Test Text"
+				})
+				self?.present(alert)
 			})
 		]
 		setSections(to: [
-			"First Section"
+			"First Section",
+			"Second Section"
 		])
 		setItems(to: [
 			"First Item",

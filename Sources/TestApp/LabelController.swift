@@ -23,6 +23,10 @@ public class LabelController: WidgetController {
 		grid.add(widget: label)
 		grid.setSizeRequest(width: 200, height: -1)
 		widget = grid
+		headerbarItem.endItems = [
+			BarButtonItem(
+			)
+		]
 	}
 
 	public override func widgetDidLoad() {
