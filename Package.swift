@@ -30,7 +30,8 @@ let package = Package(
         	name: "TestApp",
         	dependencies: ["GtkKit"],
         	resources: [
-        		.copy("ui.glade")
+        		.copy("ui.glade"),
+        		.copy("icons")
         	]
         )
     ]

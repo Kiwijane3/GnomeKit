@@ -1,4 +1,6 @@
 import Foundation
+import Gdk
+import CGdk
 import Gtk
 import GtkKit
 
@@ -7,4 +9,5 @@ Application.run(startupHandler: nil) { (app) in
 	windowController.install(controller: MenuButtonTestController())
 	windowController.beginPresentation()
 	print("Presented root")
+	IconTheme.getDefault().appendSearch(bundle: Bundle.module)
 }

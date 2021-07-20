@@ -230,9 +230,13 @@ public class BarButtonItem: BarItem {
 	
 	public func loadImage(_ button: Button) {
 		if let image = image {
-			button.set(image: iconImage)
+			// Buttons seem to have an undefined behaviour where only certain types of items, which excludes those generated from files, cannot be added via set(image)
+			// They should instead be added directly.
+			//button.styleContext.addClass(className: "image-button")
+			button.add(widget: image)
 		}
 		if let iconImage = iconImage {
+			print("Loading icon image, which has storage type: \(iconImage.storageType)")
 			button.set(image: iconImage)
 		} else {
 			button.image = nil
