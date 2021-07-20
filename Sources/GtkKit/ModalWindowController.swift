@@ -3,10 +3,16 @@ import Gtk
 
 public class ModalWindowController: WindowController {
 
+	/**
+		The window of the most recent `WindowController` ancestor.
+	*/
 	public var parentWindow: Window? {
 		return ancestor(ofType: WindowController.self)?.window
  	}
 
+	/**
+		The preferred size of the presented window.
+	*/
 	public var preferredSize: CGSize {
 		guard let parentWindow = parentWindow else {
 			return CGSize(width: 480, height: 800)

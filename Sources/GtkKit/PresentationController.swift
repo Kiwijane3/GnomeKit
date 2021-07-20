@@ -1,11 +1,16 @@
 import Foundation
 import Gtk
 
-// The presentation handles presenting a view controller hierarchy in some sort of container/window. It is also responsible for managing the titlebar stack in the presented window.
+/**
+	`PresentationController` handles presenting a view controller hierarchy in some sort of container/window. It is also responsible for managing the titlebar stack in the presented window.
+*/
 open class PresentationController {
 
 	public var _container: Container?
 
+	/**
+		The widget that the presented controller's widget hierarchy is placed into
+	*/
 	public var container: Container! {
 		get {
 			if _container == nil {
@@ -19,14 +24,26 @@ open class PresentationController {
 		}
 	}
 
+	/**
+		A presentation delegate that this controller coordinates with
+	*/
 	public var delegate: PresentationDelegate?
 
+	/**
+		The `WidgetController` that presented this controller.
+	*/
 	public var presentingController: WidgetController?
 
+	/**
+		The `WidgetController` that this controller is presenting
+	*/
 	public var presentedController: WidgetController?
 
 	private var _headerbarStack: HeaderbarStack?
 
+	/**
+		The headerbarStack that is displayed in this controller's container's headerbar
+	*/
 	public var headerbarStack: HeaderbarStack? {
 		get {
 			if canShowHeaderBar, showsHeaderbar, _headerbarStack == nil {
@@ -36,12 +53,16 @@ open class PresentationController {
 		}
 	}
 
-	/// Indicates whether a presentation controller has the ability to show headerbars
+	/**
+		Indicates whether a presentation controller has the ability to show headerbars
+	*/
 	open var canShowHeaderBar: Bool {
 		return false
 	}
 
-	/// A variable to determining whether the headerbar should be displayed, if possible
+	/**
+		Whether the controller should present a header bar if it is able to.
+	*/
 	public var showsHeaderbar: Bool = true {
 		didSet {
 			if canShowHeaderBar, showsHeaderbar, !oldValue {
@@ -53,22 +74,39 @@ open class PresentationController {
 		}
 	}
 
+	/**
+		Begins presenting this controller's content.
+	*/
 	open func beginPresentation() {
 
 	}
 
+	/**
+		Ends the presentation of this controller's content.
+	*/
 	open func endPresentation() {
 
 	}
 
+	/**
+		Creates the container used to present this controller's content.
+	*/
 	open func generateContainer() {
 
 	}
 
+	/**
+		Creates the headerbar stack used to present this controller's content.
+	*/
 	open func buildHeaderbarStack() -> HeaderbarStack {
 		return HeaderbarStack()
 	}
 
+	/**
+		Installs the controller's content into this controller's container.
+
+		- Parameter controller: The `WidgetController` to be installed in this controller's container
+	*/
 	open func install(controller: WidgetController) {
 		presentedController = controller
 		installContent()
@@ -76,6 +114,9 @@ open class PresentationController {
 		refreshHeader()
 	}
 
+	/**
+		Places the widget of the presneted controller into this controller's container.
+	*/
 	open func installContent() {
 		guard let presentedController = presentedController else {
 			return
@@ -84,14 +125,23 @@ open class PresentationController {
 		presentedController.widget.showAll()
 	}
 
+	/**
+		Displays this controller's titlebar, if applicable.
+	*/
 	open func showHeaderbar() {
 
 	}
 
+	/**
+		Hides this controller's titlebar, if applicable.
+	*/
 	open func hideHeaderbar() {
 
 	}
 
+	/**
+		Sets up this controller's `HeaderbarStack` with the configuration presented by the presented controller.
+	*/
 	open func setupHeader() {
 		guard let headerbarStack = headerbarStack else {
 			return
@@ -99,6 +149,9 @@ open class PresentationController {
 		headerbarStack.setupComplexHeaderbar(using: presentedController?.setupComplexHeaderbar())
 	}
 
+	/**
+		Updates this controller's `HeaderbarStack` with the state currently provided by the presented controller.
+	*/
 	open func refreshHeader() {
 		guard let headerbarStack = headerbarStack else {
 			return
@@ -106,6 +159,13 @@ open class PresentationController {
 		headerbarStack.update(with: presentedController?.headerbarState())
 	}
 
+	/**
+		Travels up the chain of presentation controllers to find the most recent ancestor of the given type.
+
+		- Parameter type: The type of the ancestor to be returned
+
+		- Returns: The most recent ancestor of the specified type
+	*/
 	public func ancestor<T: PresentationController>(ofType type: T.Type) -> T? {
 		var current = presentingController?.presentingController
 		while current != nil {

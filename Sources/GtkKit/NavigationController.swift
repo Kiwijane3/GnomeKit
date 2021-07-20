@@ -10,6 +10,9 @@ import Gtk
 
 public class NavigationController: WidgetController {
 
+	/**
+		The stack used by this `NavigationController` to display its children
+	*/
 	public var stack: Stack {
 		get {
 			return widget as! Stack
@@ -22,6 +25,9 @@ public class NavigationController: WidgetController {
 		}
 	}
 
+	/**
+		The index of the main child of the `NavigationController`
+	*/
 	public var mainIndex: Int {
 		get {
 			return children.count - 1;
@@ -42,6 +48,11 @@ public class NavigationController: WidgetController {
 		super.init()
 	}
 
+	/**
+		Initialises a `WindowController` with a single child controller
+
+		- Parameter rootController: The rootController to be installed in the new `NavigationController`
+	*/
 	public init(withRoot rootController: WidgetController) {
 		super.init()
 
@@ -62,6 +73,11 @@ public class NavigationController: WidgetController {
 		push(controller);
 	}
 
+	/**
+		Pushes the specified controller onto this controller's stack with an animated transition
+
+		- Parameter controller: The controller to be pushed on the navigation stack
+	*/
 	public func push(_ controller: WidgetController) {
 		addChild(controller);
 		controller.widget.showAll()
@@ -73,6 +89,9 @@ public class NavigationController: WidgetController {
 		headerNeedsRefresh()
 	}
 
+	/**
+		Pops the top controller from the navigation stack using an animated transition
+	*/
 	public func pop() {
 		if children.count > 1 {
 			// Animate the transition.
@@ -90,6 +109,11 @@ public class NavigationController: WidgetController {
 		}
 	}
 
+	/**
+		Installs the specified controller as the root of the navigation stack.
+
+		- Parameter controller: The controller to be made the root of the navigation stack
+	*/
 	public func setRoot(_ controller: WidgetController) {
 		if !children.isEmpty {
 			let oldRoot = children.remove(at: 0);

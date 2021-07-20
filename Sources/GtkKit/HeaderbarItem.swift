@@ -19,32 +19,50 @@ public enum HeaderField {
 
 public class HeaderbarItem: Equatable, Hashable {
 	
+	/**
+		A unique identifier for this `HeaderbarItem`
+	*/
 	public var uuid: UUID = UUID()
 
+	/**
+		The title to be displayed in the titlebar.
+	*/
 	public var title: String? = nil {
 		didSet {
 			updated(field: .title)
 		}
 	}
 	
+	/**
+		The subtitle to be displayed in the titlebar.
+	*/
 	public var subtitle: String? = nil {
 		didSet {
 			updated(field: .subtitle)
 		}
 	}
 	
+	/**
+		A widget to be presented in the center of the titlebar, in place of the title and subtitle.
+	*/
 	public var titleView: Widget? = nil {
 		didSet {
 			updated(field: .titleView)
 		}
 	}
 
+	/**
+		The `BarItem`s to be shown at the start of titlebar.
+	*/
 	public var startItems: [BarItem] = [] {
 		didSet {
 			updated(field: .startItems)
 		}
 	}
 	
+	/**
+		A convenience alias of `startItems`
+	*/
 	public var leftItems: [BarItem] {
 		get {
 			return startItems
@@ -54,12 +72,18 @@ public class HeaderbarItem: Equatable, Hashable {
 		}
 	}
 	
+	/**
+		The `BarItem`s to be shown at the end of the titlebar.
+	*/
 	public var endItems: [BarItem] = [] {
 		didSet {
 			updated(field: .endItems)
 		}
 	}
 	
+	/**
+		A convenience alias of `endItems`
+	*/
 	public var rightItems: [BarItem] {
 		get {
 			return endItems
@@ -69,44 +93,68 @@ public class HeaderbarItem: Equatable, Hashable {
 		}
 	}
 	
+	/**
+		Whether the supplementary item should be displayed alongside this item's contents. This is useful when the controller wants to prevent the user from exiting without using the controls it specifies.
+	*/
 	public var showsBackButton: Bool = true {
 		didSet {
 			updated(field: .showsBackButton)
 		}
 	}
 
+	/**
+		Handlers used to communicate updates to this item
+	*/
 	internal var updateHandlers = [(id: UUID, handler: (HeaderField) -> Void)]()
 	
+	/**
+		The number of items to be displayed at the start of the titlebar
+	*/
 	public var startItemCount: Int {
 		get {
 			return startItems.count
 		}
 	}
 	
+	/**
+		The number of items to be displayed at the start of the titlebar
+	*/
 	public var endItemCount: Int {
 		get {
 			return endItems.count
 		}
-	}
-	
-	public func getSupplementaryItem() -> BarItem? {
-		return nil
 	}
 
 	public static func ==(a: HeaderbarItem, b: HeaderbarItem) -> Bool{
 		return a.uuid == b.uuid
 	}
 	
+	/**
+		Subscribes to updates about this item.
+
+		- Parameter contextIdentifier: The context identifier of the subscriber.
+		- Parameter handler: The closure to be invoked when this item is updated.
+	*/
 	public func onUpdate(for contextIdentifier: UUID, _ handler: @escaping(HeaderField) -> Void) {
 		updateHandlers.append((id: contextIdentifier, handler: handler))
 	}
 
+	/**
+		Unsubscribes to updates about this item.
+
+		- Parameter contextIdentifier: The context identifier of the subscriber that is requesting to be disconnected.
+	*/
 	public func disconnectUpdates(for contextIdentifier: UUID) {
 		updateHandlers = updateHandlers.filter() { (entry) -> Bool in
 			entry.id != contextIdentifier
 		}
 	}
 
+	/**
+		Notifies subscribers that the specified field of this item has been updated.
+
+		- Parameter field: The field on this item that has been updated.
+	*/
 	internal func updated(field: HeaderField) {
 		updateHandlers.forEach() { (entry) in
 			entry.handler(field)

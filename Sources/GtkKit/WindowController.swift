@@ -10,12 +10,18 @@ import Gtk
 
 open class WindowController: PresentationController {
 	
+	/**
+		The window managed by this controller.
+	*/
 	public var window: Window {
 		get {
 			return container as! Window;
 		}
 	}
 	
+	/**
+		The delegate of this controller as a `WindowDelegate`, if it conforms to that protocol.
+	*/
 	public var windowDelegate: WindowDelegate? {
 		get {
 			return delegate as? WindowDelegate
