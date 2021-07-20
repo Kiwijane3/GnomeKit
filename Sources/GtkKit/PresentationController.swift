@@ -19,6 +19,7 @@ open class PresentationController {
 		}
 	}
 
+	public var delegate: PresentationDelegate?
 
 	public var presentingController: WidgetController?
 
