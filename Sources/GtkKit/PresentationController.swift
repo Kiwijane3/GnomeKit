@@ -81,6 +81,7 @@ open class PresentationController {
 			return
 		}
 		container.add(widget: presentedController.widget)
+		presentedController.widget.showAll()
 	}
 
 	open func showHeaderbar() {

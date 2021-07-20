@@ -12,14 +12,37 @@ public class MainWindowController: WindowController {
 	}
 
 	open override func generateContainer() {
-		let window = ApplicationWindow(application: application)
+		let window = MainWindow(application: application)
 		window.setDefaultSize(width: 1366, height: 768)
 		container = window
+		window.presentationController = self
 	}
 
 	open override func showHeaderbar() {
 		super.showHeaderbar()
 		headerbarStack?.showsWindowControls = true
+	}
+
+}
+
+// Main Window needs to be in a
+public class MainWindow: ApplicationWindow {
+
+	public var presentationController: MainWindowController?
+
+	public override init<T: ApplicationProtocol>(application: T) {
+		super.init(application: application)
+		becomeSwiftObj()
+	}
+
+	public required init(raw: UnsafeMutableRawPointer) {
+		super.init(raw: raw)
+		becomeSwiftObj()
+	}
+
+	public required init(retainingRaw raw: UnsafeMutableRawPointer) {
+		super.init(retainingRaw: raw)
+		becomeSwiftObj()
 	}
 
 }

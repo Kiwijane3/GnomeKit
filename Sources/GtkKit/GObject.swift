@@ -4,6 +4,8 @@ import CGLib
 
 let swiftObjKey = "swiftobj";
 
+let swiftPropertyKey = "swiftprop"
+
 let gtrue: gboolean = 1
 
 let gfalse: gboolean = 0
