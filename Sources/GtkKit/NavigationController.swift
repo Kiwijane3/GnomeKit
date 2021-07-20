@@ -38,8 +38,13 @@ public class NavigationController: WidgetController {
 		}
 	}
 
+	public override init() {
+		super.init()
+	}
+
 	public init(withRoot rootController: WidgetController) {
 		super.init()
+
 		addChild(rootController)
 	}
 
