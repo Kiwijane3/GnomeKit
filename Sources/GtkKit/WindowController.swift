@@ -40,6 +40,7 @@ open class WindowController: PresentationController {
 	}
 	
 	open override func beginPresentation() {
+		delegate?.presentationWillBegin(self)
 		if canShowHeaderBar, showsHeaderbar {
 			showHeaderbar()
 		}
