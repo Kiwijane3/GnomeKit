@@ -17,7 +17,7 @@ public extension PresentationDelegate {
 
 }
 
-public protocol WindowDelegate {
+public protocol WindowDelegate: PresentationDelegate {
 
 	func presentationDidBegin(_ presentation: PresentationController, withWindow window: Window)
 
