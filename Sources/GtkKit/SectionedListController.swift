@@ -16,6 +16,7 @@ open class SectionedListController<S: Hashable, I: Hashable>: SectionedWidgetCon
 		sectionedList.onCreateWidget(generateWidget(for:))
 		sectionedList.onGetTitle(title(for:))
 		sectionedList.onRowActivated(activate(in:at:))
+		sectionedList.onRowActivated(activate(in:for:))
 		sectionedList.onGetDecoration(decoration(for:))
 		sectionedList.showAll()
 	}

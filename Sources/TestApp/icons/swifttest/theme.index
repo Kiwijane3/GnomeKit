@@ -1,0 +1,12 @@
+[Icon Theme]
+name=Swift-Test-Icons
+Comment=Icons for testing
+
+Directories=actions/symbolic
+
+[actions/symbolic]
+Size=16
+Context=Actions
+Type=Scalable
+MinSize=16
+MaxSize=256

@@ -17,6 +17,7 @@ open class CollectionWidgetController<S: Hashable, I: Hashable>: SectionedWidget
 		collectionWidget.onLayout(generateLayout(for:))
 		collectionWidget.onCreateHeader(generateHeader(for:))
 		collectionWidget.onRowActivated(activate(in:at:))
+		collectionWidget.onRowActivated(activate(in:for:))
 		collectionWidget.showAll()
 	}
 
@@ -24,7 +25,7 @@ open class CollectionWidgetController<S: Hashable, I: Hashable>: SectionedWidget
 		return CollectionLayoutListSection()
 	}
 
-	 func generateHeader(for section: S) -> Widget? {
+	open func generateHeader(for section: S) -> Widget? {
 		return nil
 	}
 

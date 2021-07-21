@@ -85,6 +85,10 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		activationHandler = handler
 	}
 
+	public func onRowActivated(_ handler: @escaping (S, I) -> Void) {
+		itemActivationHandler = handler
+	}
+
 	public func sectionedModel(addedSection section: AnyHashable, at index: Int) {
 	    guard let section = section as? S else {
 	    	return	
