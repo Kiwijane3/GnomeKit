@@ -52,9 +52,28 @@ public class SectionedModel<S: Hashable, I: Hashable> {
 		itemDifferences = []
 	}
 
+	/**
+		The items that in the given section
+
+		- Parameter section: The section to query the items in
+
+		- Returns: The items in `section`
+	*/
 	public func items(in section: S) -> [I] {
 		return targetItemsMap[section] ?? []
 	}
+
+	/**
+		The items in the given section, as has been dispatched to the delegate.
+
+		- Parameter section: The section to query the items in
+
+		- Returns: The items in `section`, as has been dispatched to the delegate
+	*/
+	public func realItems(in section: S) -> [I] {
+		return realItemsMap[section] ?? []
+	}
+
 
 	public func indexOf(section: S) -> Int? {
 		return targetSections.firstIndex(of: section)

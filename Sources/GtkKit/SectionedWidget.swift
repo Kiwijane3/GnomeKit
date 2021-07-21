@@ -25,6 +25,8 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 	private var widgetCreator: ((I) -> Widget)?
 	
 	private var activationHandler: ((Int, Int) -> Void)?
+
+	private var itemActivationHandler: ((S, I) -> Void)?
 		
 	public init() {
 		box = Box(orientation: .vertical, spacing: 8)
@@ -103,12 +105,18 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 	    		if let sectionIndex = model?.indexOf(section: section), let itemIndex = model?.targetIndex(forItemAtRealIndex: row.index, in: section) {
 	    			self?.activationHandler?(sectionIndex, itemIndex)
 	    		}
+	    		if let item = model?.realItems(in: section)[row.index] {
+	    			self?.itemActivationHandler?(section, item)
+	    		}
 	    	})
 		}
 		if let flowBox = container as? FlowBox {
 			flowBox.onChildActivated { [weak self, weak model] (flowBox, child) in
 				if let sectionIndex = model?.indexOf(section: section), let itemIndex = model?.targetIndex(forItemAtRealIndex: child.index, in: section) {
 					self?.activationHandler?(sectionIndex, itemIndex)
+				}
+				if let item = model?.realItems(in: section)[child.index] {
+					self?.itemActivationHandler?(section, item)
 				}
 			}
 		}

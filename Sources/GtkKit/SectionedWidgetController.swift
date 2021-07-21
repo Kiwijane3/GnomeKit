@@ -21,6 +21,10 @@ open class SectionedWidgetController<S: Hashable, I: Hashable>: WidgetController
 		return
 	}
 
+	open func activate(in section: S, for item: I) {
+		return
+	}
+
 	public func buildWidget<T: Widget>(named name: String) -> T! {
 		guard let bundle = bundle else {
 			return nil
