@@ -239,10 +239,16 @@ public class BarButtonItem: BarItem {
 	
 	public var onClick: ((ButtonRef) -> Void)?
 
+	public var active: Bool = true {
+		didSet {
+			registry.apply(loadActive(_:))
+		}
+	}
+
 	public var menu: ActionMenu?
 	
 	internal var registry = BarItemRegistry<Button>()
-	
+
 	internal var iconImage: Image? {
 		didSet {
 			registry.apply(loadImage(_:))
@@ -295,6 +301,10 @@ public class BarButtonItem: BarItem {
 		button.onClicked { [weak self] (button) in
 				self?.clicked(button)
 			}
+	}
+
+	public func loadActive(_ button: Button) {
+		button.sensitive = active
 	}
 
 	public func clicked(_ button: ButtonRef) {
