@@ -237,6 +237,10 @@ open class WidgetController {
 				return presentingController
 			}
 			else {
+				print("Querying parent presentingController on \(self)")
+				if parent === self {
+					print("Controller is own parent!")
+				}
 				return parent?.presentingController
 			}
 		}
