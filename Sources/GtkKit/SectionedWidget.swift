@@ -38,7 +38,7 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		box.marginBottom = 8
 		box.marginStart = 8
 		marginEnd = 8
-		box.halign = .center
+		box.halign = .fill
 		propagateNaturalWidth = true
 		setup()
 	}
@@ -53,7 +53,7 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		box.marginBottom = 8
 		box.marginStart = 8
 		box.marginEnd = 8
-		box.halign = .center
+		box.halign = .fill
 		propagateNaturalWidth = true
 		setup()
 	}
@@ -68,7 +68,7 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		box.marginBottom = 8
 		box.marginStart = 8
 		box.marginEnd = 8
-		box.halign = .center
+		box.halign = .fill
 		propagateNaturalWidth = true
 		setup()
 	}
@@ -93,7 +93,6 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 	    guard let section = section as? S else {
 	    	return	
 	    }
-	    print("Adding section \(section) at index \(index)")
 	    let sectionBox = Box(orientation: .vertical, spacing: 8)
 	    sectionBoxMap[section] = sectionBox
 	    if let header = generateHeader(for: section) {
@@ -135,7 +134,6 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 	    guard let section = section as? S else {
 	    	return
 	    }
-	    print("Removing section \(section) at index \(index)")
 	    if let sectionBox = sectionBoxMap[section] {
 	    	box.remove(widget: sectionBox)
 	    	sectionBoxMap[section] = nil
@@ -148,7 +146,6 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		guard let section = section as? S, let item = item as? I else {
 			return
 		}
-		print("Adding item \(item) at index \(index) in section \(section)")
 		let widget = widgetCreator?(item) ?? Box(orientation: .horizontal, spacing: 8)
 		let container = sectionContainerMap[section]
 		// Sectioned models currently accepts section containers that are listboxes or flowboxes. These are handled separately, since their insert methods aren't inherited from a common ancestor, despite similar signature and function.
@@ -165,7 +162,6 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		guard let section = section as? S else {
 			return
 		}
-		print("Removing item \(item) at index \(index) in section \(section)")
 		let container = sectionContainerMap[section]
 		if let listBox = container as? ListBox, let child = listBox.getRowAt(index: index) {
 			listBox.remove(widget: child)
