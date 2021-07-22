@@ -337,7 +337,11 @@ open class WidgetController {
 	/**
 		The direct ancestor of this controller.
 	*/
-	public var parent: WidgetController?;
+	public var parent: WidgetController? {
+		didSet {
+			print("Controller \(self) had parent set to \(parent)")
+		}
+	}
 
 	/**
 		The most recent window controller
