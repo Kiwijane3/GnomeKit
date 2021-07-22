@@ -234,13 +234,12 @@ open class WidgetController {
 	public var presentingController: PresentationController? {
 		get {
 			if let presentingController = _presentingController {
+				print("Found presenting controller")
 				return presentingController
 			}
 			else {
 				print("Querying parent presentingController on \(self)")
-				if parent === self {
-					print("Controller is own parent!")
-				}
+				print("Parent of \(self) was \(parent)")
 				return parent?.presentingController
 			}
 		}
