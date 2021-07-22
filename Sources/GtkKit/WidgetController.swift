@@ -423,9 +423,9 @@ open class WidgetController {
 		- Parameter controller: The controller to be made a child of this controller
 	*/
 	open func addChild(_ controller: WidgetController) {
+		print("Controller \(self) added controller \(controller)")
 		children.append(controller);
 		controller.parent = self;
-		print("Added child")
 	}
 
 
