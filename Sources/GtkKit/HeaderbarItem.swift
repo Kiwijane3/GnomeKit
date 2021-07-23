@@ -304,6 +304,7 @@ public class BarButtonItem: BarItem {
 	}
 
 	public func loadActive(_ button: Button) {
+		print("Setting sensitive on \(button) to \(active)")
 		button.sensitive = active
 	}
 
