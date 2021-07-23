@@ -204,9 +204,13 @@ public class BarItemRegistry<T: Widget> {
 	}
 
 	public func apply(_ handler: (T) -> Void) {
+		print("apply(_:)")
+		print("entries: \(entries)")
 		entries = entries.filter() { (entry) -> Bool in
+			print("entry: widget: \(entry)")
 			return entry.widget != nil
 		}
+		print("After filter: entries: \(entries)")
 		// We can force unwrap here because
 		entries.forEach() { (entry) in
 			handler(entry.widget!)
@@ -241,6 +245,7 @@ public class BarButtonItem: BarItem {
 
 	public var active: Bool = true {
 		didSet {
+			print("Set active to \(active)")
 			registry.apply(loadActive(_:))
 		}
 	}
@@ -274,6 +279,8 @@ public class BarButtonItem: BarItem {
 			loadTitle(button)
 			loadImage(button)
 			loadHandler(button)
+			loadActive(button)
+			registry.register(widget: button, for: contextIdentifier)
 			return button
 		}
 	}
