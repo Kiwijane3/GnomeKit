@@ -204,13 +204,9 @@ public class BarItemRegistry<T: Widget> {
 	}
 
 	public func apply(_ handler: (T) -> Void) {
-		print("apply(_:)")
-		print("entries: \(entries)")
 		entries = entries.filter() { (entry) -> Bool in
-			print("entry: widget: \(entry)")
 			return entry.widget != nil
 		}
-		print("After filter: entries: \(entries)")
 		// We can force unwrap here because
 		entries.forEach() { (entry) in
 			handler(entry.widget!)
@@ -241,11 +237,16 @@ public class BarButtonItem: BarItem {
 		}
 	}
 	
+	public var style: ButtonStyle {
+		didSet {
+			registry.apply(loadStyle(_:))
+		}
+	}
+
 	public var onClick: ((ButtonRef) -> Void)?
 
 	public var active: Bool = true {
 		didSet {
-			print("Set active to \(active)")
 			registry.apply(loadActive(_:))
 		}
 	}
@@ -260,13 +261,14 @@ public class BarButtonItem: BarItem {
 		}
 	}
 
-	public init(title: String? = nil, image: Image? = nil, iconName: String? = nil, onClick: ((ButtonProtocol) -> Void)? = nil, menu: ActionMenu? = nil) {
+	public init(title: String? = nil, image: Image? = nil, iconName: String? = nil, style: ButtonStyle = .default, onClick: ((ButtonProtocol) -> Void)? = nil, menu: ActionMenu? = nil) {
 		self.title = title
 		self.image = image
 		self.iconName = iconName
 		if let iconName = iconName {
 			iconImage = Image(iconName: iconName, size: .button)
 		}
+		self.style = style
 		self.onClick = onClick
 		self.menu = menu
 	}
@@ -278,8 +280,9 @@ public class BarButtonItem: BarItem {
 			let button = Button()
 			loadTitle(button)
 			loadImage(button)
-			loadHandler(button)
+			loadStyle(button)
 			loadActive(button)
+			loadHandler(button)
 			registry.register(widget: button, for: contextIdentifier)
 			return button
 		}
@@ -297,22 +300,35 @@ public class BarButtonItem: BarItem {
 			button.add(widget: image)
 		}
 		if let iconImage = iconImage {
-			print("Loading icon image, which has storage type: \(iconImage.storageType)")
 			button.set(image: iconImage)
 		} else {
 			button.image = nil
 		}
 	}
+
+	public func loadActive(_ button: Button) {
+		button.sensitive = active
+	}
 	
+	public func loadStyle(_ button: Button) {
+		if style != .destructive {
+			button.styleContext.removeClass(className: "destructive-action")
+		}
+		if style != .recommended {
+			button.styleContext.removeClass(className: "suggested-action")
+		}
+		if style == .destructive {
+			button.styleContext.addClass(className: "destructive-action")
+		}
+		if style == .recommended {
+			button.styleContext.addClass(className: "suggested-action")
+		}
+	}
+
 	public func loadHandler(_ button: Button) {
 		button.onClicked { [weak self] (button) in
 				self?.clicked(button)
 			}
-	}
-
-	public func loadActive(_ button: Button) {
-		print("Setting sensitive on \(button) to \(active)")
-		button.sensitive = active
 	}
 
 	public func clicked(_ button: ButtonRef) {
@@ -349,4 +365,11 @@ public class CustomWidgetBarItem<T: Widget>: BarItem {
 		registry.apply(handler)
 	}
 
+}
+
+public enum ButtonStyle {
+	case `default`
+	case cancel
+	case destructive
+	case recommended
 }
