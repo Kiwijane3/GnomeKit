@@ -34,21 +34,21 @@ public class DocumentPickerTestController: WidgetController {
 	}
 
 	func showFileSaveDialog(_ button: ButtonRef) {
-		let controller = DocumentPickerController.forSavingFile(ofType: plainText, title: "Save File", onFileSelected: saveFile(at:ofType:))
+		let controller = DocumentPickerController.forSavingFile(ofType: plainText, title: "Save File", onFileSelected: saveFile(at:))
 		present(controller)
 	}
 
-	func saveFile(at url: URL, ofType type: FileType?) {
-		print("Saving file at location: \(url) with type: \(type?.title ?? "No Type")")
+	func saveFile(at url: URL) {
+		print("Saving file at location: \(url)")
 	}
 
 	func showFileOpenDialog(_ button: ButtonRef) {
-		let controller = DocumentPickerController.forOpeningFile(ofTypes: [.allTextFiles, .allFiles], title: "Open file", onFileSelected: openFile(at:ofType:))
+		let controller = DocumentPickerController.forOpeningFile(ofTypes: [.allTextFiles, .allFiles], title: "Open file", onFileSelected: openFile(at:))
 		present(controller)
 	}
 
-	func openFile(at url: URL, ofType type: FileType?) {
-		print("Opening file at location: \(url) with type: \(type?.title ?? "No Type")")
+	func openFile(at url: URL) {
+		print("Opening file at location: \(url)")
 	}
 
 

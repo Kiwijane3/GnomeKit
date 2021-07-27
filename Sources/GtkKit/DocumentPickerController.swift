@@ -176,6 +176,7 @@ public class DocumentPickerController: PresentationController {
 		for fileType in fileTypes {
 			fileChooserDialog.add(filter: fileType.fileFilter)
 		}
+		fileChooserDialog.modal = true
 		fileChooserDialog.onResponse(handler: onResponse(_:responseID:))
 		fileChooserDialog.onUnrealize() { [weak self] (_) in
 			self?.containerDidUnrealise()
