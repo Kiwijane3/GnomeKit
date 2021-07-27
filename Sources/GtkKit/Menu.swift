@@ -133,8 +133,8 @@ public class Action: MenuElement {
 		let label = Label(text: title)
 		box.packStart(child: label, expand: false, fill: false, padding: 0)
 		menuItem.add(widget: box)
-		menuItem.onActivate() { [weak self] (_) in
-			self?.handler()
+		menuItem.onActivate() { [handler]  (_) in
+			handler()
 		}
 	}
 
