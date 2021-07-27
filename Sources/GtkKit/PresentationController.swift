@@ -88,6 +88,22 @@ open class PresentationController {
 
 	}
 
+
+	/**
+		Should be called when the container is unrealised in order to perform cleanup. If this function is overridden, the overriding definition should call super
+	*/
+	open func containerDidUnrealise() {
+		// Reset the presented controller property of the controller that presented this controller.
+		if let presentingController = presentingController, presentingController.presentedController === self {
+			presentingController.presentedController = nil
+		}
+		// Reset the presenting controller property of the controller this controller presented.
+		if let presentedController = presentedController, presentedController.presentingController === self {
+			presentedController.presentingController = nil
+		}
+		delegate?.presentationDidEnd(self)
+	}
+
 	/**
 		Creates the container used to present this controller's content.
 	*/

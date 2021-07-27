@@ -32,6 +32,9 @@ public class ModalWindowController: WindowController {
 			window.setDefaultSize(width: Int(preferredSize.width), height: Int(preferredSize.height))
 		}
 		container = window
+		window.onUnrealize() { [weak self] (_) in
+			self?.containerDidUnrealise()
+		}
 	}
 
 }

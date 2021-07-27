@@ -16,6 +16,9 @@ public class MainWindowController: WindowController {
 		window.setDefaultSize(width: 1366, height: 768)
 		container = window
 		window.presentationController = self
+		window.onUnrealize() { [weak self] (_) in
+			self?.containerDidUnrealise()
+		}
 	}
 
 	open override func showHeaderbar() {

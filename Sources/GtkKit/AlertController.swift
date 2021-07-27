@@ -63,7 +63,10 @@ public class AlertController: PresentationController {
 		}
 		onResponseSignalID = messageDialog.onResponse() { [weak self] (_, responseID) in
 			self?.actions[responseID].activate()
-			self?.presentingController?.dismiss()
+			self?.endPresentation()
+		}
+		messageDialog.onUnrealize() { [weak self] (_) in
+			self?.containerDidUnrealise()
 		}
 		messageDialog.showAll()
 	}

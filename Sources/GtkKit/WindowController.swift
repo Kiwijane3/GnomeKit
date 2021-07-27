@@ -53,21 +53,12 @@ open class WindowController: PresentationController {
 		refreshHeader()
 		container.showAll()
 		presentedController?.presentingController = self
-		delegate?.presentationDidBegin(self)
 		windowDelegate?.presentationDidBegin(self, withWindow: window)
-		window.onUnrealize() { [weak self] (_) in
-			guard let strongSelf = self else {
-				return
-			}
-			strongSelf.delegate?.presentationDidEnd(strongSelf)
-			strongSelf.windowDelegate?.presentationDidEnd(strongSelf, withWindow: strongSelf.window)
-		}
+		delegate?.presentationDidBegin(self)
 	}
 
 	open override func endPresentation() {
 		window.close()
-		delegate?.presentationDidEnd(self)
-		windowDelegate?.presentationDidEnd(self, withWindow: window)
 	}
 	
 }
