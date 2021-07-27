@@ -253,6 +253,8 @@ public class BarButtonItem: BarItem {
 
 	public var menu: ActionMenu?
 	
+	public var menuProvider: (() -> ActionMenu)?
+
 	internal var registry = BarItemRegistry<Button>()
 
 	internal var iconImage: Image? {
@@ -261,7 +263,7 @@ public class BarButtonItem: BarItem {
 		}
 	}
 
-	public init(title: String? = nil, image: Image? = nil, iconName: String? = nil, style: ButtonStyle = .default, onClick: ((ButtonProtocol) -> Void)? = nil, menu: ActionMenu? = nil) {
+	public init(title: String? = nil, image: Image? = nil, iconName: String? = nil, style: ButtonStyle = .default, onClick: ((ButtonProtocol) -> Void)? = nil, menu: ActionMenu? = nil, menuProvider: (() -> ActionMenu)? = nil) {
 		self.title = title
 		self.image = image
 		self.iconName = iconName
@@ -271,6 +273,7 @@ public class BarButtonItem: BarItem {
 		self.style = style
 		self.onClick = onClick
 		self.menu = menu
+		self.menuProvider = menuProvider
 	}
 	
 	public func getWidget(for contextIdentifier: UUID) -> Widget {
@@ -334,6 +337,8 @@ public class BarButtonItem: BarItem {
 	public func clicked(_ button: ButtonRef) {
 		if let menu = menu {
 			menu.popup(at: button, widgetAnchor: .south, menuAnchor: .north)
+		} else if let menuProvider = menuProvider{
+			menuProvider().popup(at: button, widgetAnchor: .south, menuAnchor: .north)
 		} else if let onClick = onClick {
 			onClick(button)
 		}
