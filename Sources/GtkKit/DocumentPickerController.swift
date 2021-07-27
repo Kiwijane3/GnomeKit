@@ -147,7 +147,7 @@ public class DocumentPickerController: PresentationController {
 		- Returns: A new `DocumentPickerController` with the provided configuration.
 	*/
 	public static func forOpeningFile(ofType type: FileType = .allFiles, title: String, onFileSelected: @escaping (_ url: URL) -> Void) -> DocumentPickerController {
-		return self.init(fileTypes: [type], mode: .open, title: title, onFileSelected: onFileSelected)
+		return self.init(fileTypes: [type], mode: .open, title: title, onFileSelected: dcWrapHandler(onFileSelected))
 	}
 
 	/**
@@ -164,7 +164,7 @@ public class DocumentPickerController: PresentationController {
 		- Returns: A new `DocumentPickerController` with the provided configuration.
 	*/
 	public static func forOpeningFile(ofTypes types: [FileType], title: String, onFileSelected: @escaping (_ url: URL) -> Void) -> DocumentPickerController {
-		return self.init(fileTypes: types, mode: .open, title: title, onFileSelected: onFileSelected)
+		return self.init(fileTypes: types, mode: .open, title: title, onFileSelected: dcWrapHandler(onFileSelected))
 	}
 
 	public override func generateContainer() {
