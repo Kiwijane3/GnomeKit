@@ -35,6 +35,8 @@ public class SectionedModel<S: Hashable, I: Hashable> {
 
 	var idleActive: Bool = false
 
+	public var isEmpty: Bool
+
 	public var delegate: SectionedModelDelegate?
 
 	public var sections: [S] {
@@ -50,6 +52,7 @@ public class SectionedModel<S: Hashable, I: Hashable> {
 		realItemsMap = [:]
 		sectionDifferences = []
 		itemDifferences = []
+		isEmpty = true
 	}
 
 	/**
@@ -64,7 +67,8 @@ public class SectionedModel<S: Hashable, I: Hashable> {
 	}
 
 	/**
-		The items in the given section, as has been dispatched to the delegate.
+		The items in the given section,
+as has been dispatched to the delegate.
 
 		- Parameter section: The section to query the items in
 
@@ -123,6 +127,25 @@ public class SectionedModel<S: Hashable, I: Hashable> {
 		if difference.count > 0 {
 			itemDifferences.append(SectionDifference(difference, in: section))
 			startIdleIfNeeded()
+		}
+	}
+
+	public func calculateIsEmpty() {
+		let oldValue = isEmpty
+		if targetSections.isEmpty {
+			isEmpty = true
+		} else {
+			isEmpty = true
+			for section in sections {
+				if let targetItems = targetItemsMap[section] {
+					if !targetItems.isEmpty {
+						isEmpty = false
+					}
+				}
+			}
+		}
+		if isEmpty != oldValue {
+			delegate?.sectionedModel(isEmptyChangedTo: isEmpty)
 		}
 	}
 
@@ -217,6 +240,8 @@ public protocol SectionedModelDelegate {
 	func sectionedModel(removedItem item: Any, at index: Int, in section: AnyHashable)
 
 	func sectionedModelCompletedDispatch()
+
+	func sectionedModel(isEmptyChangedTo isEmpty: Bool)
 
 }
 

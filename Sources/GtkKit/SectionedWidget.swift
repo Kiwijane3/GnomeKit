@@ -4,7 +4,11 @@ import Gtk
 // A sectioned widget is the base for widgets that display several vertically arranged containers, possibly with headers.
 public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, SectionedModelDelegate {
 
+	var stack: Stack
+
 	var box: Box
+
+	var placeholder: Widget?
 
 	public var model: SectionedModel<S, I>? {
 		didSet {
@@ -29,9 +33,12 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 	private var itemActivationHandler: ((S, I) -> Void)?
 		
 	public init() {
+		stack = Stack()
 		box = Box(orientation: .vertical, spacing: 8)
 		super.init(hadjustment: nil as Adjustment?, vadjustment: nil as Adjustment?)
-		self.add(widget: box)
+		add(widget: stack)
+		stack.transitionType = .crossfade
+		stack.add(widget: box)
 		box.showAll()
 		box.valign = .start
 		box.marginTop = 8
@@ -44,9 +51,12 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 	}
 	
 	public required init(raw: UnsafeMutableRawPointer) {
+		stack = Stack()
 		box = Box(orientation: .vertical, spacing: 8)
 		super.init(raw: raw)
-		add(widget: box)
+		add(widget: stack)
+		stack.transitionType = .crossfade
+		stack.add(widget: box)
 		box.valign = .start
 		box.showAll()
 		box.marginTop = 8
@@ -59,9 +69,12 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 	}
 	
 	public required init(retainingRaw raw: UnsafeMutableRawPointer) {
+		stack = Stack()
 		box = Box(orientation: .vertical, spacing: 8)
 		super.init(retainingRaw: raw)
-		add(widget: box)
+		add(widget: stack)
+		stack.transitionType = .crossfade
+		stack.add(widget: box)
 		box.valign = .start
 		box.showAll()
 		box.marginTop = 8
@@ -87,6 +100,24 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 
 	public func onRowActivated(_ handler: @escaping (S, I) -> Void) {
 		itemActivationHandler = handler
+	}
+
+	public func setPlaceholder(to placeholder: Widget) {
+		if let currentPlaceholder = self.placeholder {
+			stack.remove(widget: currentPlaceholder)
+		}
+		self.placeholder = placeholder
+		stack.add(widget: placeholder)
+		if model?.isEmpty ?? true {
+			stack.setVisible(child: placeholder)
+		}
+	}
+
+	public func removePlaceholder() {
+		guard let placeholder = placeholder else {
+			return
+		}
+		stack.remove(widget: placeholder)
 	}
 
 	public func sectionedModel(addedSection section: AnyHashable, at index: Int) {
@@ -171,6 +202,14 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		}
 	}
 	
+	public func sectionedModel(isEmptyChangedTo isEmpty: Bool) {
+		if isEmpty, let placeholder = placeholder {
+			stack.setVisible(child: placeholder)
+		} else {
+			stack.setVisible(child: box)
+		}
+	}
+
 	public func generateContainer(for section: S) -> Container {
 		return ListBox()
 	}

@@ -65,4 +65,8 @@ public class SectionedModelTester: SectionedModelDelegate {
 		}
 	}
 
+	public func sectionedModel(isEmptyChangedTo isEmpty: Bool) {
+		print("isEmpty changed to: \(isEmpty)")
+	}
+
 }
