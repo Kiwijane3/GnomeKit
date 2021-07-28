@@ -110,6 +110,7 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		stack.add(widget: placeholder)
 		if model?.isEmpty ?? true {
 			stack.setVisible(child: placeholder)
+			print("Making placeholder visible")
 		}
 	}
 
@@ -203,6 +204,7 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 	}
 	
 	public func sectionedModel(isEmptyChangedTo isEmpty: Bool) {
+		print("model isEmpty updated to \(isEmpty)")
 		if isEmpty, let placeholder = placeholder {
 			stack.setVisible(child: placeholder)
 		} else {
