@@ -108,6 +108,7 @@ as has been dispatched to the delegate.
 		if differences.count > 0 {
 			startIdleIfNeeded()
 		}
+		calculateIsEmpty()
 	}
 
 	public func setItems(to target: [I], in section: S) {
@@ -128,6 +129,7 @@ as has been dispatched to the delegate.
 			itemDifferences.append(SectionDifference(difference, in: section))
 			startIdleIfNeeded()
 		}
+		calculateIsEmpty()
 	}
 
 	public func calculateIsEmpty() {
