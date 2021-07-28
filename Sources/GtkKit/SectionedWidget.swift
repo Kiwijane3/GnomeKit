@@ -108,6 +108,7 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		}
 		self.placeholder = placeholder
 		stack.add(widget: placeholder)
+		stack.showAll()
 		if model?.isEmpty ?? true {
 			stack.setVisible(child: placeholder)
 			print("Making placeholder visible")
