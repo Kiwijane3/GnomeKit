@@ -109,13 +109,13 @@ public class SideDetailController: WidgetController {
 			detailStack.transitionType = .none
 			detailStack.setVisible(child: detailWidget)
 			cleanupPreviousDetailWidget()
+			self.didDisplayDetailController()
 			detailRevealer.set(revealChild: true, onComplete: { [weak self] () in
-				self?.didDisplayDetailController()
 			})
 		} else {
 			detailStack.transitionType = .overLeft
+			self.didDisplayDetailController(
 			detailStack.setVisible(child: detailWidget, onComplete: { [weak self] () in
-				self?.didDisplayDetailController()
 				self?.cleanupPreviousDetailWidget()
 			})
 		}
