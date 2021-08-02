@@ -108,12 +108,16 @@ public class SideDetailController: WidgetController {
 		if !detailRevealer.childRevealed {
 			detailStack.transitionType = .none
 			detailStack.setVisible(child: detailWidget)
+			//
 			cleanupPreviousDetailWidget()
-			self.didDisplayDetailController()
+			// In this case, we wait to inform the ultimateChild of the transition until the revealer is in place
+			// This is so that child can adjust to the proper size
 			detailRevealer.set(revealChild: true, onComplete: { [weak self] () in
+				self?.didDisplayDetailController()
 			})
 		} else {
 			detailStack.transitionType = .overLeft
+			// In this case we can inform the ultimate child immediately, since the size of the main child does not change
 			self.didDisplayDetailController()
 			detailStack.setVisible(child: detailWidget, onComplete: { [weak self] () in
 				self?.cleanupPreviousDetailWidget()
@@ -145,11 +149,11 @@ public class SideDetailController: WidgetController {
 		if let detailRevealer = detailRevealer {
 			// Remove the detail child and remove its widget from the revealer once the revealer is collapsed.
 			if detailRevealer.childRevealed {
+				removeChild(detailChild)
 				detailRevealer.set(revealChild: false, onComplete: { [weak self] () in
 					self?.didDismissDetailController()
+					self?.detailRevealer?.removeAllChildren()
 				})
-				hideDetail()
-				removeChild(detailChild)
 			} else {
 				detailRevealer.removeAllChildren()
 				removeChild(detailChild)
