@@ -20,6 +20,8 @@ public class SideDetailController: WidgetController {
 		}
 	}
 
+	private var transitionCompleteHandler: (() -> Void)?
+
 	public init(primaryChild: WidgetController, detailChild: WidgetController? = nil) {
 		super.init()
 		addChild(primaryChild)
@@ -107,22 +109,23 @@ public class SideDetailController: WidgetController {
 			detailStack.transitionType = .none
 			detailStack.setVisible(child: detailWidget)
 			cleanupPreviousDetailWidget()
-		} else {
-			stackTransitionCompleteHandlerId = detailStack.onNotify(handler: { [weak self] (widget, param) in
-				self?.stackTransitionCompleteOnNotify(param: param)
+			detailRevealer.set(revealChild: true, onComplete: { [weak self] () in
+				self?.didDisplayDetailController()
 			})
+		} else {
 			detailStack.transitionType = .overLeft
-			detailStack.setVisible(child: detailWidget)
+			detailStack.setVisible(child: detailWidget, onComplete: { [weak self] () in
+				self?.didDisplayDetailController()
+				self?.cleanupPreviousDetailWidget()
+			})
 		}
 	}
 
-	public func stackTransitionCompleteOnNotify(param: ParamSpecRef) {
-		if let name = param.name, name == "transition-running", detailStack!.transitionRunning == false {
-			cleanupPreviousDetailWidget()
-			if let detailStack = detailStack, let dismissalCompleteHandlerId = dismissalCompleteHandlerId {
-				signalHandlerDisconnect(instance: detailStack, handlerID: dismissalCompleteHandlerId)
-			}
+	private func didDisplayDetailController() {
+		guard let detailController = secondaryChild else {
+			return
 		}
+		(ultimateChild as? SideDetailControllerDelegate)?.sideDetailController(self, displayed: detailController)
 	}
 
 	private func cleanupPreviousDetailWidget() {
@@ -134,7 +137,6 @@ public class SideDetailController: WidgetController {
 		print("Cleaned up detail widget")
 	}
 
-	public var dismissalCompleteHandlerId: Int?
 
 	public override func dismissDetailChild() -> Bool {
 		guard let detailChild = secondaryChild else {
@@ -143,29 +145,22 @@ public class SideDetailController: WidgetController {
 		if let detailRevealer = detailRevealer {
 			// Remove the detail child and remove its widget from the revealer once the revealer is collapsed.
 			if detailRevealer.childRevealed {
-				// Sign up to intercept the completion of the dismissal
-				dismissalCompleteHandlerId = detailRevealer.onNotify(handler: { [weak self] (widget, param) in
-					self?.dismissalCompleteOnNotify(param: param)
+				detailRevealer.set(revealChild: false, onComplete: { [weak self] () in
+					self?.didDismissDetailController()
 				})
 				hideDetail()
 				removeChild(detailChild)
 			} else {
 				detailRevealer.removeAllChildren()
 				removeChild(detailChild)
+				didDismissDetailController()
 			}
 		}
 		return true
 	}
 
-	// Handles disposing of a removed detail controller's child once the dismissal animation is complete. This connects to a generic notify signal, so we need to check for the correct property
-	public func dismissalCompleteOnNotify(param: ParamSpecRef) {
-		// Once the dismissal is complete, child-revealed will be updated
-		if let name = param.name, name == "child-revealed" {
-			detailStack?.removeAllChildren()
-			if let detailRevealer = detailRevealer, let dismissalCompleteHandlerId = dismissalCompleteHandlerId {
-				signalHandlerDisconnect(instance: detailRevealer, handlerID: dismissalCompleteHandlerId)
-			}
-		}
+	private func didDismissDetailController() {
+		(ultimateChild as? SideDetailControllerDelegate)?.sideDetailControllerDismissedDetail(self)
 	}
 
 	public func displayDetail() {
@@ -182,5 +177,13 @@ public class SideDetailController: WidgetController {
 		}
 		detailContainer.set(revealChild: false)
 	}
+
+}
+
+public protocol SideDetailControllerDelegate {
+
+	func sideDetailController(_ sideDetailController: SideDetailController, displayed detailChild: WidgetController)
+
+	func sideDetailControllerDismissedDetail(_ sideDetailController: SideDetailController)
 
 }

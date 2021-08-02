@@ -430,6 +430,8 @@ open class WidgetController {
 	*/
 	open func installedIn(_ controller: WidgetController) {}
 
+	open func onWidgetReallocated() {}
+
 	/**
 		Called when this controller has been removed as a child of `parent`
 	*/
