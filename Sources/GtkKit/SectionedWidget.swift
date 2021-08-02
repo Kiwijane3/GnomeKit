@@ -10,6 +10,9 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 
 	var placeholder: Widget?
 
+	/**
+		The `SectionedModel` used to populate this widget
+	*/
 	public var model: SectionedModel<S, I>? {
 		didSet {
 			oldValue?.delegate = nil
@@ -31,7 +34,10 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 	private var activationHandler: ((Int, Int) -> Void)?
 
 	private var itemActivationHandler: ((S, I) -> Void)?
-		
+
+	/**
+		Creates a new `SectionedWidget`
+	*/
 	public init() {
 		stack = Stack()
 		box = Box(orientation: .vertical, spacing: 8)
@@ -90,18 +96,40 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 
 	}
 	
-	public func onCreateWidget(_ handler: @escaping (I) -> Widget) {
+	/**
+		Sets the handler for creating widgets
+
+		- Parameter item: The item to create a widget for
+	*/
+	public func onCreateWidget(_ handler: @escaping (_ item: I) -> Widget) {
 		widgetCreator = handler
 	}
 	
-	public func onRowActivated(_ handler: @escaping (Int, Int) -> Void) {
+	/**
+		Sets the handler for responding to element activation
+
+		- Parameter sectionIndex: The index of the section the activation occurs in
+
+		- Parameter itemIndex: The index of the item that was activated
+	*/
+	public func onRowActivated(_ handler: @escaping (_ sectionIndex: Int, _ itemIndex: Int) -> Void) {
 		activationHandler = handler
 	}
 
-	public func onRowActivated(_ handler: @escaping (S, I) -> Void) {
+	/**
+		Sets the handler for responding to element activation
+
+		- Parameter section: The identifier for the section in which the activation occurred
+
+		- Parameter item: The identifier for the item that was activated
+	*/
+	public func onRowActivated(_ handler: @escaping (_ section: S, _ item: I) -> Void) {
 		itemActivationHandler = handler
 	}
 
+	/**
+		Sets a placeholder `Widget` to be displayed when no items are being displayed
+	*/
 	public func setPlaceholder(to placeholder: Widget) {
 		if let currentPlaceholder = self.placeholder {
 			stack.remove(widget: currentPlaceholder)
@@ -115,6 +143,9 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		}
 	}
 
+	/**
+		Removes the placeholder widget
+	*/
 	public func removePlaceholder() {
 		guard let placeholder = placeholder else {
 			return
@@ -135,27 +166,7 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 	    let container = generateContainer(for: section)
 	    sectionBox.packStart(child: container, expand: true, fill: true, padding: 0)
 	    // Setup activation
-	    if let listBox = container as? ListBox {
-	    	listBox.onRowActivated(handler: { [weak self, weak model] (listBox, row) in
-	    		// Get the item
-	    		if let sectionIndex = model?.indexOf(section: section), let itemIndex = model?.targetIndex(forItemAtRealIndex: row.index, in: section) {
-	    			self?.activationHandler?(sectionIndex, itemIndex)
-	    		}
-	    		if let item = model?.realItems(in: section)[row.index] {
-	    			self?.itemActivationHandler?(section, item)
-	    		}
-	    	})
-		}
-		if let flowBox = container as? FlowBox {
-			flowBox.onChildActivated { [weak self, weak model] (flowBox, child) in
-				if let sectionIndex = model?.indexOf(section: section), let itemIndex = model?.targetIndex(forItemAtRealIndex: child.index, in: section) {
-					self?.activationHandler?(sectionIndex, itemIndex)
-				}
-				if let item = model?.realItems(in: section)[child.index] {
-					self?.itemActivationHandler?(section, item)
-				}
-			}
-		}
+		setupActivation(container: container, section: section)
 		sectionContainerMap[section] = container
 	    // TODO: Setup activation handling for the box.
 	    box.packStart(child: sectionBox, expand: false, fill: false, padding: 0)
@@ -182,12 +193,7 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		let widget = widgetCreator?(item) ?? Box(orientation: .horizontal, spacing: 8)
 		let container = sectionContainerMap[section]
 		// Sectioned models currently accepts section containers that are listboxes or flowboxes. These are handled separately, since their insert methods aren't inherited from a common ancestor, despite similar signature and function.
-		if let listBox = container as? ListBox {
-			listBox.insert(child: widget, position: index)
-		}
-		if let flowBox = container as? FlowBox {
-			flowBox.insert(widget: widget, position: index)
-		}
+		insert(widget: widget, into: container, at: index)
 		widget.showAll()
 	}
 	
@@ -196,6 +202,55 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 			return
 		}
 		let container = sectionContainerMap[section]
+		remove(widgetAt: index, from: container)
+	}
+
+	/**
+		Connects a handler to `container` for processing activation for processing activation events
+
+		- Parameter section: The section identifier for `container`
+	*/
+	open func setupActivation(container: Container, section: S) {
+		if let listBox = container as? ListBox {
+	    		listBox.onRowActivated(handler: { [weak self, weak model] (listBox, row) in
+	    			self?.onActivate(at: row.index, in: section)
+	    		})
+		}
+		if let flowBox = container as? FlowBox {
+			flowBox.onChildActivated { [weak self] (flowBox, child) in
+				self?.onActivate(at: child.index, in: section)
+			}
+		}
+	}
+
+	/**
+		Invokes `activationHandler` and `itemActivationHandler` for an activation of the item at `index` in `section`
+	*/
+	public func onActivate(at index: Int, in section: S) {
+		if let sectionIndex = model?.indexOf(section: section), let itemIndex = model?.targetIndex(forItemAtRealIndex: index, in: section) {
+			self.activationHandler?(sectionIndex, itemIndex)
+		}
+		if let item = model?.realItems(in: section)[index] {
+			self.itemActivationHandler?(section, item)
+		}
+	}
+
+	/**
+		Inserts `widget` into `container` at `index`
+	*/
+	open func insert(widget: Widget, into container: Container?, at index: Int) {
+		if let listBox = container as? ListBox {
+			listBox.insert(child: widget, position: index)
+		}
+		if let flowBox = container as? FlowBox {
+			flowBox.insert(widget: widget, position: index)
+		}
+	}
+
+	/**
+		Removes the widget at `index` from `container`
+	*/
+	open func remove(widgetAt index: Int, from container: Container?) {
 		if let listBox = container as? ListBox, let child = listBox.getRowAt(index: index) {
 			listBox.remove(widget: child)
 		}
@@ -213,10 +268,16 @@ public class SectionedWidget<S: Hashable, I: Hashable>: ScrolledWindow, Sectione
 		}
 	}
 
+	/**
+		Generates a container widget for `section`
+	*/
 	public func generateContainer(for section: S) -> Container {
 		return ListBox()
 	}
 	
+	/**
+		Generates a header widget for `section`
+	*/
 	public func generateHeader(for section: S) -> Widget? {
 		return nil
 	}

@@ -3,6 +3,9 @@ import Gtk
 
 open class SectionedListController<S: Hashable, I: Hashable>: SectionedWidgetController<S, I> {
 
+	/**
+		The `SectionedList` managed by this controller
+	*/
 	public var sectionedList: SectionedListWidget<S, I>!
 
 	public override func loadWidget() {
@@ -25,10 +28,16 @@ open class SectionedListController<S: Hashable, I: Hashable>: SectionedWidgetCon
 		return ListBoxRow()
 	}
 	
+	/**
+		Provides the title for `section`
+	*/
 	open func title(for section: S) -> String? {
 		return nil
 	}
 
+	/**
+		Provides the style for `section`
+	*/
 	open func decoration(for section: S) -> SectionDecoration? {
 		return nil
 	}

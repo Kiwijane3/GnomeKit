@@ -11,7 +11,7 @@ import Gtk
 open class WindowController: PresentationController {
 	
 	/**
-		The window managed by this controller.
+		The `Window` managed by this controller.
 	*/
 	public var window: Window {
 		get {
@@ -20,7 +20,7 @@ open class WindowController: PresentationController {
 	}
 	
 	/**
-		The delegate of this controller as a `WindowDelegate`, if it conforms to that protocol.
+		The `delegate` of this controller as a `WindowDelegate`, if it conforms to that protocol.
 	*/
 	public var windowDelegate: WindowDelegate? {
 		get {

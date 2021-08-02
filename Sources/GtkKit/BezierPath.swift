@@ -59,7 +59,7 @@ let windingFillRule = FillRule.init(0);
 public class BezierPath {
 	
 	// This empty shared graphical context is used by CGPoint to calculate path extents and contains.
-	private static var calcContext: ContextProtocol = Context(surface: imageSurfaceCreate(format: .init(0), width: 0, height: 0));
+	internal static var calcContext: ContextProtocol = Context(surface: imageSurfaceCreate(format: .init(0), width: 0, height: 0));
 	
 	enum Operation {
 		case move(target: CGPoint)
@@ -71,45 +71,106 @@ public class BezierPath {
 	}
 	
 	internal var operations: [Operation] = [];
-	
+
+	/**
+		The width used for drawing lines
+	*/
 	public var lineWidth: Double = 1.0;
 	
+	/**
+		The style used for drawing the ends of lines
+	*/
 	public var lineCapStyle: LineCap = .butt;
 	
+	/**
+		The style used for joining lines
+	*/
 	public var lineJoinStyle: LineJoin = .bevel
 
+	/**
+		Determines whether lines should be joined with a bevel or a miter. The graphics library divides the length of the miter by the line width. If the result is greater than the miter limit, the join is drawn as a bevel.
+	*/
 	public var miterLimit: Double = 10;
 	
+	/**
+		Sets the fill rule to be used determine whether regions are inside or outside complex paths
+	*/
 	public var usesEvenOddFillRule: Bool = false;
 	
+	/**
+		Sets the pattern of dashes to be used when drawing.
+	*/
 	public var dashPattern: [Double]?;
 	
+	/**
+		Determines the starting point of the dash pattern
+	*/
 	public var dashPhase: Double = 0;
 
 	public init() {
 
 	}
 	
+	/**
+		Moves the current point to `target`
+
+		- Parameter target: The position to move to
+	*/
 	public func move(to target: CGPoint) {
 		operations.append(.move(target: target))
 	}
 	
+	/**
+		Adds a line from the current point to `target`
+	*/
 	public func addLine(to target: CGPoint) {
 		operations.append(.line(target: target));
 	}
 	
+	/**
+		Adds an arc
+
+		- Parameter center: The center of the arc
+
+		- Parameter radius: The radius of the arc
+
+		- Parameter startAngle: The angle at which the arc starts
+
+		- Parameter endAngle: The angle at which the arc ends
+
+		- Parameter clockwise: Whether the arc should be drawn clockwise
+	*/
 	public func addArc(withCenter center: CGPoint, radius: Double, startAngle: Double, endAngle: Double, clockwise: Bool) {
 		operations.append(.arc(center: center, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: clockwise));
 	}
 	
+	/**
+		Adds a bezier curve, which starts at the current point
+
+		- Parameter target: The end point of the bezier curve
+
+		- Parameter controlA: The first control point of the bezier curve
+
+		- Parameter controlB: The second control point of the bezier curve
+	*/
 	public func addCurve(to target: CGPoint, controlA: CGPoint, controlB: CGPoint) {
 		operations.append(.curve(target: target, controlA: controlA, controlB: controlB))
 	}
 	
+	/**
+		Adds a quadratic bezier curve, which starts at the current point
+
+		- Parameter target: The end point of the bezier curve
+
+		- Parameter control: The control point of the bezier curve
+	*/
 	public func addQuadCurve(to target: CGPoint, control: CGPoint) {
 		operations.append(.quadCurve(target: target, control: control))
 	}
 	
+	/**
+		Adds a rectangle corresponding to `rect` to the current path
+	*/
 	public func addRect(_ rect: CGRect) {
 		operations.append(.move(target: rect.origin))
 		operations.append(.line(target: CGPoint(x: rect.maxX, y: rect.minY)))
@@ -118,15 +179,28 @@ public class BezierPath {
 		operations.append(.close)
 	}
 
+	/**
+		Closes the current path: i.e., adds a line connecting the start point and end point
+	*/
 	public func close() {
 		operations.append(.close)
 	}
 
+	/**
+		Sets the dash pattern for drawing line
+
+		- Parameter pattern: The dash pattern
+
+		- Parameter phase: The offset to start the pattern at
+	*/
 	public func setLineDash(_ pattern: [Double]?, phase: Double) {
 		self.dashPattern = pattern;
 		self.dashPhase = phase;
 	}
 	
+	/**
+		Fills the current path onto `context`
+	*/
 	public func fill(on context: ContextProtocol) {
 		// Save and restore the context so we don't modify any existing paths.
 		context.save();
@@ -135,6 +209,9 @@ public class BezierPath {
 		context.restore();
 	}
 	
+	/**
+		Strokes the current path onto `context`
+	*/
 	public func stroke(on context: ContextProtocol) {
 		context.save();
 		writePath(to: context);
@@ -142,10 +219,16 @@ public class BezierPath {
 		context.restore();
 	}
 	
+	/**
+		Returns whether `point` falls within the area painted by this path
+	*/
 	public func contains(_ point: CGPoint) -> Bool {
-		return fillContains(point)
+		return fillContains(point) || strokeContains(point)
 	}
 
+	/**
+		Returns whether `point` falls within the area painted by filling this path
+	*/
 	public func fillContains(_ point: CGPoint) -> Bool {
 		// Since all contains and bounding box calculations are self-contained, we can just clear the path.
 		BezierPath.calcContext.newPath();
@@ -153,21 +236,15 @@ public class BezierPath {
 		return BezierPath.calcContext.isInFill(Double(point.x), Double(point.y));
 	}
 	
+	/**
+		Returns whether `point` falls within the area painted by stroking this path
+	*/
 	public func strokeContains(_ point: CGPoint) -> Bool {
 		// Since all contains and bounding box calculations are self-contained, we can just clear the path.
 		BezierPath.calcContext.newPath();
 		writePath(to: BezierPath.calcContext);
 		return BezierPath.calcContext.isInStroke(Double(point.x), Double(point.y))
 	}
-	
-	/** public var bounds: CGRect {
-		get {
-			BezierPath.calcContext.newPath();
-			writePath(to: BezierPath.calcContext);
-			let extents = BezierPath.calcContext.pathExtents
-			return CGRect(origin: CGPoint(x: extents.x1, y: extents.y1), size: CGSize(width: extents.x2 - extents.x1, height: extents.y2 - y1));
-		}
-	} */
 	
 	// Writes this Path's operations onto the context.
 	internal func writePath(to context: ContextProtocol) {

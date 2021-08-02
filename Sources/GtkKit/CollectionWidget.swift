@@ -13,11 +13,21 @@ public class CollectionWidget<S: Hashable, I: Hashable>: SectionedWidget<S, I> {
 		})
 	}
 
-	public func onLayout(_ handler: @escaping (S) -> CollectionLayoutSection) {
+	/**
+		Sets the handler for providing the `CollectionLayoutSection`s for each section
+
+		- Parameter section: The section to provide a `CollectionLayoutSection` for
+	*/
+	public func onLayout(_ handler: @escaping (_ section: S) -> CollectionLayoutSection) {
 		layoutProvider = handler
 	}
 	
-	public func onCreateHeader(_ handler: @escaping (S) -> Widget?) {
+	/**
+		Sets the handler for providing header widgets for each section
+
+		- Parameter section: The section to provide a header widget for
+	*/
+	public func onCreateHeader(_ handler: @escaping (_ section: S) -> Widget?) {
 		headerProvider = handler
 	}
 	
@@ -42,34 +52,95 @@ public class CollectionWidget<S: Hashable, I: Hashable>: SectionedWidget<S, I> {
 
 }
 
+/**
+	A `CollectionLayoutSection` specifies the configuration for a section in a `CollectionWidget`
+*/
 public protocol CollectionLayoutSection {
 	
+	/**
+		Creates the container to be used in the `CollectionWidget`
+	*/
 	func generateContainer() -> Container
 
 }
 
+/**
+	`CollectionLayoutListSection` provides a `ListBox` to be displayed in a `CollectionWidget`
+*/
 public class CollectionLayoutListSection: CollectionLayoutSection {
 
+	public let decoration: SectionDecoration
+
+	/**
+		Creates a new `CollectionLayoutListSection`
+
+		- Parameter decoration: The decoration style to be used for the section
+	*/
+	public init(decoration: SectionDecoration = .frame) {
+		self.decoration = decoration
+	}
+
 	public func generateContainer() -> Container {
-	     return ListBox()
+	     let listBox = ListBox()
+	     if decoration == .frame {
+	     	listBox.styleContext.addClass(className: "frame")
+	     }
+	     return listBox
 	}
 
 }
 
+
+/**
+	`CollectionLayoutFlowSection` provides a `FlowBox` to be displayed in a `CollectionWidget`
+*/
 public class CollectionLayoutFlowSection: CollectionLayoutSection {
 	
-	public var rowSpacing: Int
+	/**
+		The space to be placed horizontally between the children of the section
+	*/
+	public let rowSpacing: Int
 	
-	public var columnSpacing: Int
+	/**
+		The space to be placed vertically between the children of the section
+	*/
+	public let columnSpacing: Int
 	
-	public var orientation: Gtk.Orientation
+	/**
+		The orientation in which the children of the section should flow
+	*/
+	public let orientation: Gtk.Orientation
+	
+	/**
+		The minimum number of children to be displayed along the flowing axis. More children may be displayed if there is enough space
+	*/
+	public let minChildren: Int
 
-	public var minChildren: Int
-	
-	public var maxChildren: Int
+	/**
+		The maximum number of children to be displayed along the flowing axis. Fewer children may be displayed if there is not enough space
+	*/
+	public let maxChildren: Int
 
-	public var homogenous: Bool
+	/**
+		Whether each child of the section should have the same size.
+	*/
+	public let homogenous: Bool
 	
+	/**
+		Creates a new `CollectionLayoutFlowSection`
+
+		- Parameter rowSpacing: The space to be placed horizontally between the children of the section
+
+		- Parameter columnSpacing: The space to be placed vertically between the children of the section
+
+		- Parameter orientation: The orientation in which the children of the section should flow
+
+		- Parameter minChildren: The minimum number of children to be displayed along the flowing axis. More children may be displayed if there is enough space
+
+		- Parameter maxChildren: The maximum number of children to be displayed along the flowing axis. Fewer children may be displayed if there is not enough space
+
+		- Parameter homogenous: Whether each child of the section should have the same size.
+	*/
 	public init(rowSpacing: Int, columnSpacing: Int, orientation: Gtk.Orientation, minChildren: Int, maxChildren: Int, homogenous: Bool) {
 		self.rowSpacing = rowSpacing
 		self.columnSpacing = columnSpacing

@@ -12,7 +12,7 @@ import GLibObject
 open class WidgetController {
 
 	/**
-		The swift bundle that this controller loads its interface from. This will typically be `Bundle.module`
+		The swift `Bundle` that this controller loads its interface from. This should typically be overridden to return `Bundle.module`
 	*/
 	open var bundle: Bundle? {
 		return nil
@@ -26,7 +26,7 @@ open class WidgetController {
 	}
 
 	/**
-		The id of the widget in the ui file that this controller loads it widget from. Make sure this corresponds to the id, not the widget name.
+		The id of the widget in the ui file that should be loaded as this controller's widget. Make sure this corresponds to the id, not the widget name.
 	*/
 	open var widgetName: String? {
 		return nil
@@ -42,7 +42,7 @@ open class WidgetController {
 
 	/**
 		The root widget for the controller.
-		*/
+	*/
 	public var widget: Widget {
 		get {
 			if let _widget = _widget {
@@ -120,11 +120,7 @@ open class WidgetController {
 	}
 
 	/**
-		Returns the controller's widget as the given type. This function does not do any type-checking, so make sure the type is correct.
-
-		- Parameter type: The type the widget is returned as
-
-		- Returns: The controller's root widget as the specified type
+		Returns the `widget` as an instance of `type`. This function does not do any type-checking, so make sure `type` is correct.
 	*/
 	public final func root<T: Widget>(as type: T.Type) -> T! {
 		loadWidgetIfNeeded();
@@ -133,11 +129,7 @@ open class WidgetController {
 
 
 	/**
-		Returns the widget with the specified name in the controller's widget hierarchy. This function doesn't check whether the widget exists or is of the specified type.
-
-		- Parameter name: The name of the widget to be looked up in the controller's widget hierarchy
-
-		- Returns: The widget with the specified name
+		Returns the widget named `name` in the controller's widget hierarchy. This function doesn't check whether the widget exists or is of the specified type.
 	*/
 	public final func child<T: Widget>(named name: String) -> T! {
 		loadWidgetIfNeeded()
@@ -147,18 +139,16 @@ open class WidgetController {
 	// MARK:- Presentation
 
 	/**
-		Shows the specified controller in a primary context. For instance, a navigation controller will push the specified controller onto its navigation stack,
-		and a SplitWidgetController will show the controller in its master panel.
-		If this controller cannot show the controller itself, it will pass the controller on to its parent.
-
-		- Parameter controller: The controller to be shown in a primary context
+		Shows `controller` in a primary context. For instance, a `NavigationController` will push `controller` onto its navigation stack,
+		and a `SplitWidgetController` will show `controller` in its master panel.
+		If this controller cannot show `controller` itself, it will pass the controller on to its `parent`.
 	*/
 	open func show(_ controller: WidgetController) {
 		parent?.show(controller)
 	}
 
 	/**
-		Shows the specified controller in a secondary context. For instance, a SplitWidgetController will show the controller in its detail panel.
+		Shows `controller` in a secondary context. For instance, a `SplitWidgetController` will show the controller in its detail panel.
 		If this controller cannot show the controller itself, it will pass the controller on its parent.
 
 		- Parameter controller: The controller to be shown in a secondary context
@@ -177,9 +167,7 @@ open class WidgetController {
 	}
 
 	/**
-		Presents the specified presentation controller from this controller.
-
-		- Parameter controller: The presentation controller to be presented
+		Presents `controller` from this controller
 	*/
 	open func present(_ controller: PresentationController) {
 		presentedController = controller
@@ -188,9 +176,7 @@ open class WidgetController {
 	}
 
 	/**
-		Presents the specified controller in a modal presentation, based on the presentation style specified by that controller's `presentation` property.
-
-		- Parameter controller: The controller to be presented modally
+		Presents `controller` using a `PresentationController`, based on the presentation style specified by `controller`'s `presentation` property.
 	*/
 	open func present(_ controller: WidgetController) {
 		addChild(controller)
@@ -207,7 +193,7 @@ open class WidgetController {
 	private var _presentation: ModalPresentation?;
 
 	/**
-		The `ModalPresentation` that specifies how this controller will be displayed when presented by another controller.
+		The `ModalPresentation` that specifies how this controller will be displayed when presented
 	*/
 	public var presentation: ModalPresentation {
 		get {
@@ -246,8 +232,8 @@ open class WidgetController {
 	}
 
 	/**
-		Dismisses the currently shown/presented controller, if any. One controller is dismissed on each call, with modally presented controllers taking priority, the controllers in a secondary context.
-		If this controller cannot dismiss any controller, then the call is passed onto the parent controller.
+		Dismisses a currently shown `WidgetController` or `PresentationController`, if any. One controller is dismissed on each call, with presented controllers taking priority, then controllers shown in a secondary context.
+		If this controller cannot dismiss any controller, then the call is passed onto `parent`.
 	*/
 	public func dismiss() {
 		if dismissModal() {
@@ -260,7 +246,9 @@ open class WidgetController {
 	}
 
 	/**
-		Dismisses the modal controller, if there is one. Returns whether the dismissal process should be terminated; Generally, this will be true if a controller has been dismissed.
+		Dismisses the presented controller, if there is one.
+
+		- Returns: Whether the dismissal process should be terminated
 	*/
 	internal func dismissModal() -> Bool {
 		guard let presentedController = presentedController else {
@@ -275,7 +263,7 @@ open class WidgetController {
 	}
 
 	/**
-		Dismisses a controller that has been presented in a secondary context. This will remove the controller from the controller hierarchy. Returns whether the dismissal process should be terminated; Generally, this will be true if a controller has been dismissed
+		Dismisses a controller that has been shown in a secondary context. This will remove the controller from the controller hierarchy.
 	.
 
 		- Returns: Whether the dismissal process should be terminated
@@ -290,8 +278,6 @@ open class WidgetController {
 	/**
 		The main child of this controller. For non-container controllers, this will be nil. For container controllers, this will be the most prominent child.
 		For instance, a `NavigationController` will return the controller currently at the top of its stack.
-
-		- Returns: The main child of this controller.
 	*/
 	open var mainChild: WidgetController? {
 		get {
@@ -300,9 +286,7 @@ open class WidgetController {
 	}
 
 	/**
-		Traverses the main child chain to fetch the final controller in this chain
-
-		- Returns: The ultimate child of this controller
+		Returns the ultimate child
 	*/
 	public var ultimateChild: WidgetController? {
 		get {
@@ -311,27 +295,27 @@ open class WidgetController {
 	}
 
 	/**
-		The controller that has been shown in a primary context
+		The `WidgetController` that has been shown in a primary context
 	*/
 	open var primaryChild: WidgetController?
 
 	/**
-		The controller that has been shown in a secondary context
+		The `WidgetController` that has been shown in a secondary context
 	*/
 	open var secondaryChild: WidgetController?
 
 	/**
-		The controller that has been shown in a tertiary context
+		The `WidgetController` that has been shown in a tertiary context
 	*/
 	open var tertiaryChild: WidgetController?
 
 	/**
-		The controller that has been presented modally
+		The `WidgetController` that has been presented using a `PresentationController`
 	*/
 	open var modallyPresented: WidgetController?
 
 	/**
-		The direct ancestor of this controller.
+		The `WidgetController` that has shown or presented this controller
 	*/
 	public var parent: WidgetController? {
 		didSet {
@@ -340,7 +324,7 @@ open class WidgetController {
 	}
 
 	/**
-		The most recent window controller
+		The most recent ancestor `PresentationController` that is a `WindowController`
 	*/
 	public var windowController: WindowController? {
 		// Check the most recent presenting controller
@@ -418,9 +402,7 @@ open class WidgetController {
 	public var children: [WidgetController] = [];
 
 	/**
-		Adds the specified controller as a child of this controller
-
-		- Parameter controller: The controller to be made a child of this controller
+		Adds `controller` as a child of this controller
 	*/
 	open func addChild(_ controller: WidgetController) {
 		print("Controller \(self) added controller \(controller)")
@@ -430,9 +412,7 @@ open class WidgetController {
 
 
 	/**
-		Removes the specified controller as a child of this controller
-
-		- Parameter controller: The controller that should be removed as a child of this controller
+		Removes the `controller` as a child of this controller
 	*/
 	open func removeChild(_ controller: WidgetController) {
 		let index = children.firstIndex(where:  { (element) in
@@ -446,27 +426,20 @@ open class WidgetController {
 	}
 
 	/**
-		Called when this controller's widget is installed in the widget of its parent.
-
-		- Parameter controller: The controller that has installed this controller's widget in its widget hierarchy
+		Called when this `widget` is displayed in the `widget` of `controller`, which will generally be `parent`
 	*/
 	open func installedIn(_ controller: WidgetController) {}
 
 	/**
-		Called when this controller has been removed as a child of it parent
+		Called when this controller has been removed as a child of `parent`
 	*/
 	open func removedFromParent() {}
 
-	/// When a container controller updates its main child, such as when a navigation controller pushes or pops a controller, it should call mainUpdated() on its parent so it can perform any updates, which should propagate it to its parents until it reaches the root controller. This method is used to propagate headerbarItem updates to window controllers.
+	/**
+		Indicates to `parent` that the main child of this controller has changed
+	*/
 	open func mainUpdated() {
 		parent?.mainUpdated();
-	}
-
-	/**
-		This function is called when a parent controller reallocates the proportion of the screen allocated to the controller, such as when a SplitViewController hides the primary view. It is not called when the window is resized.
-	*/
-	open func onWidgetReallocated() {
-		return
 	}
 
 	// MARK:- Items for headerbars
@@ -487,12 +460,12 @@ open class WidgetController {
 	}
 
 	/**
-		The tab item specifies the elements that should be used to identify the controller in the switcher when it is displayed in a tab controller.
+		The tab item specifies the elements that should be used to identify the controller in the switcher when it is displayed in a `TabController`.
 	*/
 	public var tabItem: TabItem = TabItem()
 
 	/**
-		An additional item to be displayed alongside the main controller's items in the titlebar. This can be used by container controllers to provide controls for thier state;
+		An additional `BarItem` to be displayedalongside the main controller's titlebar contents. This can be used by container controllers to provide controls for thier state;
 		For instance, `NavigationController` uses this property to display a back button.
 	*/
 	public var supplementaryItem: BarItem? {
@@ -503,12 +476,12 @@ open class WidgetController {
 
 
 	/**
-		An override item that is displayed in the titlebar in place of the title.
+		A `BarItem` to be displayed in place of the main controller's title.
 	*/
 	public var headerSwitcherItem: BarItem?
 
 	/**
-		Resolves the supplementaryItem to be displayed. This will be supplementary item of the deepest controller in the main chain with a defined item. Container controllers should not provide supplementary items in their base state so that their ancestors can dismiss them.
+		Returns the `BarItem` supplementaryItem to be displayed alongside the main controller's titlebar context. This will be `supplementaryItem` of the deepest controller in the main chain with a defined item. Container controllers should not provide supplementary items in their base state so that their ancestors can dismiss them.
 	*/
 	public func resolveSupplementaryItem() -> BarItem? {
 		if mainChild === self {
@@ -518,32 +491,32 @@ open class WidgetController {
 		}
 	}
 
+	/**
+		Returns the `BarItem` to be displayed in place of the main controller's title
+	*/
 	public func resolveHeaderSwitcherItem() -> BarItem? {
 		return headerSwitcherItem ?? mainChild?.resolveHeaderSwitcherItem()
 	}
 
 	/**
-		Requests that the presenting controller update its titlebar to reflect the current state.
+		Requests that the `PresentationController` managing this controller update its titlebar to reflect the current state.
 	*/
 	public func headerNeedsRefresh() {
 		presentingController?.refreshHeader()
 	}
 
 	/**
-		Provides the state to be displayed in the headerbar. Controllers should only need to control this if they can display a complex headerbar when displayed as the root of a presentation context.
-		If your custom class overrides setupComplexHeader, then it probably needs to override this.
-
-		- Returns: A `HeaderbarState` to be displayed in the titlebar
+		Returns a `HeaderbarState` to be used to populate the titlebar. This will usually only need to be overridden if `setupComplexHeaderbar` is also overridden.
 	*/
 	open func headerbarState() -> HeaderbarState {
 		return .simple(items: headerbarItems ?? [], main: ultimateChild?.headerbarItem, supplementaryItems: resolveSupplementaryItem(), switcherItem: resolveHeaderSwitcherItem())
 	}
 
 	/**
-		fThis function can be overridden to provide a complex headerbar, such as a split headerbar, to be used when the controller is displayed as the root of a presentation context
-		If you need to update this configuration after the presentation begins, call presentingController.refreshHeaderbarSetup()
+		This function can be overridden to provide a complex headerbar, such as a split headerbar, to be used when the controller is displayed as the root of a `PresentationController`
+		If you need to update this configuration after the presentation begins, call `presentingController.refreshHeaderbarSetup()`
 
-		- Returns: A tuple. The first elemt is the widget to be shown in the titlebar, which should contain `HeaderbarStack`s.
+		- Returns: A tuple. The first element is the widget to be shown in the titlebar, which should contain `HeaderbarStack`s.
 			The second parameter is the list of displayed `HeaderbarStack`s, with the order corresponding to the order of headerbar states returend by `headerbarState()`
 	*/
 	open func setupComplexHeaderbar() -> (Widget, [HeaderbarStack])? {

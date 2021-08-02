@@ -9,7 +9,7 @@ open class PresentationController {
 	public var _container: Container?
 
 	/**
-		The widget that the presented controller's widget hierarchy is placed into
+		The `Container` that is used for the presentation
 	*/
 	public var container: Container! {
 		get {
@@ -25,7 +25,7 @@ open class PresentationController {
 	}
 
 	/**
-		A presentation delegate that this controller coordinates with
+		The `PresentationDelegate` that this controller coordinates with
 	*/
 	public var delegate: PresentationDelegate?
 
@@ -42,7 +42,7 @@ open class PresentationController {
 	private var _headerbarStack: HeaderbarStack?
 
 	/**
-		The headerbarStack that is displayed in this controller's container's headerbar
+		The `HeaderbarStack` that is displayed in this controller's container's headerbar
 	*/
 	public var headerbarStack: HeaderbarStack? {
 		get {
@@ -54,7 +54,7 @@ open class PresentationController {
 	}
 
 	/**
-		Indicates whether a presentation controller has the ability to show headerbars
+		Indicates whether this controller has the ability to show headerbars
 	*/
 	open var canShowHeaderBar: Bool {
 		return false
@@ -90,7 +90,7 @@ open class PresentationController {
 
 
 	/**
-		Should be called when the container is unrealised in order to perform cleanup. If this function is overridden, the overriding definition should call super
+		Should be called when the container is unrealised in order to perform cleanup. If this function is overridden, the overriding definition should call `super.containerDidUnrealise``
 	*/
 	open func containerDidUnrealise() {
 		// Reset the presented controller property of the controller that presented this controller.
@@ -105,21 +105,21 @@ open class PresentationController {
 	}
 
 	/**
-		Creates the container used to present this controller's content.
+		Creates the `Container` used to present this controller's content.
 	*/
 	open func generateContainer() {
 
 	}
 
 	/**
-		Creates the headerbar stack used to present this controller's content.
+		Creates the `HeaderbarStack` used to present this controller's content.
 	*/
 	open func buildHeaderbarStack() -> HeaderbarStack {
 		return HeaderbarStack()
 	}
 
 	/**
-		Installs the controller's content into this controller's container.
+		Installs `controller`s content into this controller's container.
 
 		- Parameter controller: The `WidgetController` to be installed in this controller's container
 	*/
@@ -131,7 +131,7 @@ open class PresentationController {
 	}
 
 	/**
-		Places the widget of the presneted controller into this controller's container.
+		Places the widget of `presentedController` into this controller's container.
 	*/
 	open func installContent() {
 		guard let presentedController = presentedController else {
@@ -156,7 +156,7 @@ open class PresentationController {
 	}
 
 	/**
-		Sets up this controller's `HeaderbarStack` with the configuration presented by the presented controller.
+		Sets up this controller's `HeaderbarStack` with the configuration provided by the presented controller.
 	*/
 	open func setupHeader() {
 		guard let headerbarStack = headerbarStack else {

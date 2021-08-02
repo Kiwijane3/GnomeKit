@@ -35,10 +35,19 @@ public class SectionedModel<S: Hashable, I: Hashable> {
 
 	var idleActive: Bool = false
 
+	/**
+		Whether this model has no contents.
+	*/
 	public var isEmpty: Bool
 
+	/**
+		The `SectionedModelDelegate` this model sends updates to
+	*/
 	public var delegate: SectionedModelDelegate?
 
+	/**
+		The current sections
+	*/
 	public var sections: [S] {
 		get {
 			return targetSections
@@ -67,8 +76,7 @@ public class SectionedModel<S: Hashable, I: Hashable> {
 	}
 
 	/**
-		The items in the given section,
-as has been dispatched to the delegate.
+		The items in the given section, as has been dispatched to the delegate.
 
 		- Parameter section: The section to query the items in
 
@@ -78,16 +86,39 @@ as has been dispatched to the delegate.
 		return realItemsMap[section] ?? []
 	}
 
+	/**
+		Gets the current index of the given section
 
+		- Parameter section: The section to be queried
+
+		- Returns: The current index of the given section
+	*/
 	public func indexOf(section: S) -> Int? {
 		return targetSections.firstIndex(of: section)
 	}
 
+	/**
+		Gets the current index of the item in the given section
+
+		- Parameter item: The item to be queried
+
+		- Parameter section: The section to find the item in
+
+		- Returns: The index of the given item in the given section
+	*/
 	public func indexOf(item: I, in section: S) -> Int? {
 		return items(in: section).firstIndex(of: item)
 	}
 
-	// Translates an index in the real data for the given section to the respective index in the target. Used to give application code indices that reflect their declared state
+	/**
+		Translates an index in the data as dispatched for the given section to the index in the data as declared. Used to give application code indices that reflect their declared state
+
+		- Parameter realIndex: The index in the dispatched data to be translated
+
+		- Parameter section: The section of the item index to be translated
+
+		- Returns: The translated index. If nil, this indicates that item at the real index is not present in the declared data
+	*/
 	public func targetIndex(forItemAtRealIndex realIndex: Int, in section: S) -> Int? {
 		guard let realItems = realItemsMap[section], let targetItems = targetItemsMap[section] else {
 			return nil
@@ -96,11 +127,23 @@ as has been dispatched to the delegate.
 		return targetItems.firstIndex(of: item)
 	}
 
+	/**
+		Translates an index in the sections as dispatched to the index in the section as declared.
+
+		- Parameter realIndex: The index in the dispatched section to be translated
+
+		- Returns: The translated index. If nil, this indicates the section at the real index is not present in the declared sections.
+	*/
 	public func sectionsTargetIndex(forSectionAtRealIndex realIndex: Int) -> Int? {
 		let section = realSections[realIndex]
 		return targetSections.firstIndex(of: section)
 	}
 
+	/**
+		Sets the sections of this model to the specified value
+
+		- Parameter target: The new sections
+	*/
 	public func setSections(to target: [S]) {
 		targetSections = target
 		let differences = Array(targetSections.difference(from: realSections))
@@ -111,6 +154,13 @@ as has been dispatched to the delegate.
 		calculateIsEmpty()
 	}
 
+	/**
+		Sets the items in the given section to the specified value
+
+		- Parameter target: The new items for the given section
+
+		- Parameter section: The section to be updated.
+	*/
 	public func setItems(to target: [I], in section: S) {
 		targetItemsMap[section] = target
 		// Only calculate and dispatch the difference if the section is currently loaded. Otherwise, just retain the target and dispatch the differences when the section is loaded.
@@ -132,7 +182,7 @@ as has been dispatched to the delegate.
 		calculateIsEmpty()
 	}
 
-	public func calculateIsEmpty() {
+	func calculateIsEmpty() {
 		let oldValue = isEmpty
 		if targetSections.isEmpty {
 			isEmpty = true
@@ -151,7 +201,7 @@ as has been dispatched to the delegate.
 		}
 	}
 
-	public func applySectionChange(_ change: CollectionDifference<S>.Change) {
+	internal func applySectionChange(_ change: CollectionDifference<S>.Change) {
 		switch change {
 			case .insert(let offset, let element, _):
 				realSections.insert(element, at: offset)
@@ -170,7 +220,7 @@ as has been dispatched to the delegate.
 		}
 	}
 
-	public func applyItemChange(_ change: CollectionDifference<I>.Change, in section: S) {
+	internal func applyItemChange(_ change: CollectionDifference<I>.Change, in section: S) {
 		switch change {
 			case .remove(let offset, let element, _):
 				var items = realItemsMap[section]

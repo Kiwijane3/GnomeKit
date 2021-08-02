@@ -3,6 +3,11 @@ import Gtk
 
 public extension Stack {
 
+	/**
+		Transitions this stack to display `child`
+
+		- Parameter onComplete: A closure to be invoked once `child` has been displayed
+	*/
 	public func setVisible(child: Widget, onComplete completionHandler: @escaping () -> Void) {
 		setVisible(child: child)
 		var signalId: Int?

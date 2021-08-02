@@ -15,7 +15,7 @@
         "repositoryURL": "https://github.com/rhx/gir2swift.git",
         "state": {
           "branch": "main",
-          "revision": "d783a7bc71ad862e9b27e9cd6fa034f231aa1e31",
+          "revision": "fa8fe5023a43c8b3ed82fe3fb528c9bc88618341",
           "version": null
         }
       },
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "986d191f94cec88f6350056da59c2e59e83d1229",
-          "version": "0.4.3"
+          "revision": "83b23d940471b313427da226196661856f6ba3e0",
+          "version": "0.4.4"
         }
       },
       {
@@ -33,7 +33,7 @@
         "repositoryURL": "https://github.com/rhx/SwiftAtk.git",
         "state": {
           "branch": "main",
-          "revision": "207fb3652aa19e19d38c6babcd52da065c5e40b6",
+          "revision": "bd6856b5d66bbbb0943c263f2e559aaffc4e4700",
           "version": null
         }
       },
@@ -42,7 +42,7 @@
         "repositoryURL": "https://github.com/rhx/SwiftCairo.git",
         "state": {
           "branch": "main",
-          "revision": "aac785bebc7d0b0115058c59dfd06fa54197766a",
+          "revision": "671ff24df96afef49d9d69c98d7860bd7b639bf8",
           "version": null
         }
       },
@@ -51,7 +51,7 @@
         "repositoryURL": "https://github.com/rhx/SwiftGdk.git",
         "state": {
           "branch": "main",
-          "revision": "2edf31f4b5109684a22f034d2c1988c3e621f140",
+          "revision": "e92c5e23b8db9430499294ee6cb4f467a3512825",
           "version": null
         }
       },
@@ -60,7 +60,7 @@
         "repositoryURL": "https://github.com/rhx/SwiftGdkPixbuf.git",
         "state": {
           "branch": "main",
-          "revision": "2dbeeb319b52a21aed74d9d72904e403cd0a54b7",
+          "revision": "a3223efe5437e48a652b90ccbb6e0f3595e15941",
           "version": null
         }
       },
@@ -69,7 +69,7 @@
         "repositoryURL": "https://github.com/rhx/SwiftGIO.git",
         "state": {
           "branch": "main",
-          "revision": "0c7d9c3eb543c69ded113612e26cd89d0527bf7d",
+          "revision": "35e8d6afbf7e9d349907fdfe257985b850c2b11f",
           "version": null
         }
       },
@@ -78,7 +78,7 @@
         "repositoryURL": "https://github.com/rhx/SwiftGLib.git",
         "state": {
           "branch": "main",
-          "revision": "33749ef16808c5150b459a4e48304f63d466d888",
+          "revision": "1f9e7a8f927054a72ea5d65815369a6c451707cb",
           "version": null
         }
       },
@@ -87,7 +87,7 @@
         "repositoryURL": "https://github.com/rhx/SwiftGModule.git",
         "state": {
           "branch": "main",
-          "revision": "f040056bfb04b2855096de79cf9cd4fcab20bcda",
+          "revision": "f67e2b2e8398267ebb2fd979527d7e097e38b5cf",
           "version": null
         }
       },
@@ -96,7 +96,7 @@
         "repositoryURL": "https://github.com/rhx/SwiftGObject.git",
         "state": {
           "branch": "main",
-          "revision": "d8b068069995ebd4dcea0fdabaad7d325a8737ad",
+          "revision": "a0d7d6fe7e2990629e0d4d704abb8069aa9a0a3c",
           "version": null
         }
       },
@@ -105,7 +105,7 @@
         "repositoryURL": "https://github.com/rhx/SwiftGtk.git",
         "state": {
           "branch": "main",
-          "revision": "09b0a14e3f71268f19dafe76c23d045ed8b594ca",
+          "revision": "48238d756c992e968c616acf185253a950b64f9c",
           "version": null
         }
       },
@@ -123,7 +123,7 @@
         "repositoryURL": "https://github.com/rhx/SwiftPango.git",
         "state": {
           "branch": "main",
-          "revision": "28e5f79a6f142890a933a3b8ebd3f2a6e73d4c2b",
+          "revision": "097a39d1fc7f4dcabaf27b0e1c8da8c1d7a28ff8",
           "version": null
         }
       },
@@ -132,7 +132,7 @@
         "repositoryURL": "https://github.com/rhx/SwiftPangoCairo.git",
         "state": {
           "branch": "main",
-          "revision": "8c8485633217bef3f450155644d965fee2161c2e",
+          "revision": "8434da2f410609dd7f30affc50c0f2cc83361ac3",
           "version": null
         }
       }

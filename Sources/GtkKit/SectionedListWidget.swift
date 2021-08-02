@@ -9,10 +9,20 @@ public class SectionedListWidget<S: Hashable, I: Hashable>: SectionedWidget<S, I
 
 	var decorationProvider: ((S) -> SectionDecoration?)?
 
-	public func onGetTitle(_ handler: @escaping ((S) -> String?)) {
+	/**
+		Sets the handler that provides the section titles
+
+		- Parameter section: The section to provide a title for.
+	*/
+	public func onGetTitle(_ handler: @escaping ((_ section: S) -> String?)) {
 		titleProvider = handler
 	}
 	
+	/**
+		Sets the handler that provides the decoration style for each section
+
+		- Parameter section: The section to provide a decoration style for
+	*/
 	public func onGetDecoration(_ handler: @escaping ((S) -> SectionDecoration?)) {
 		decorationProvider = handler
 	}
@@ -41,6 +51,12 @@ public class SectionedListWidget<S: Hashable, I: Hashable>: SectionedWidget<S, I
 }
 
 public enum SectionDecoration {
+	/**
+		Indicates the section should have no background or border
+	*/
 	case none
+	/**
+		Indicates the item should have a background and border as defined by the active theme
+	*/
 	case frame
 }

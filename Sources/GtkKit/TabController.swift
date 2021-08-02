@@ -16,7 +16,7 @@ import GLibObject
 open class TabController: WidgetController {
 
 	/**
-		The stack used by this `TabController` to display its children.
+		The `Stack` used by this controller to display its children.
 	*/
 	public var stack: Stack {
 		get {
@@ -43,9 +43,7 @@ open class TabController: WidgetController {
 	}
 
 	/**
-		Initialises a `TabController` with the specified children.
-
-		- Parameter children: The controllers to be displayed.
+		Initialises a `TabController` containing `children`
 	*/
 	public init(children: [WidgetController]) {
 		super.init();
@@ -70,16 +68,14 @@ open class TabController: WidgetController {
 	}
 
 	/**
-		Adds the specified controller as one of the children of this `TabController`. The specified controller will be the last child.
-
-		- Parameter controller: The controller to be added as a child
+		Adds `controller` as the last child of this controller
 	*/
 	public override func addChild(_ controller: WidgetController) {
 		addChild(controller, at: children.count);
 	}
 
 	/**
-		Adds the specified controller as a child of this `TabController` at the given index.
+		Adds `controller` as a child of this controller at `index`
 
 		- Parameter controller: The controller to be added as a child
 		- Parameter index: The index that the child should be added at
@@ -101,10 +97,7 @@ open class TabController: WidgetController {
 	}
 
 	/**
-		Adds the widget of the child controller to the stack at the given index.
-
-		- Parameter controller: The controller whose widget shoudl be added
-		- Parameter index: The index of the controller
+		Adds the widget of `controller` to the stack at `index`
 	*/
 	internal func addToStack(_ controller: WidgetController, at index: Int) {
 		let widgetRef = controller.widget
@@ -124,10 +117,7 @@ open class TabController: WidgetController {
 
 
 	/**
-		Moves the specified controller to the specified index
-
-		- Parameter controller: The controller to be moved.
-		- Parameter index: The index to move the specified controller to
+		Moves `controller` to `index`
 	*/
 	public func move(_ controller: WidgetController, to index: Int) {
 		if let currentIndex = children.firstIndex(where: { (element) -> Bool in
@@ -160,7 +150,7 @@ open class TabController: WidgetController {
 	}
 
 	/**
-		Updates the `title` and `icon-name` child properties of the widget of the controller at the specified index to reflect the controllers' tabItem.
+		Updates the `title` and `icon-name` child properties of the widget of the controller at `index` to reflect the controllers' `tabItem`
 	*/
 	internal func loadItem(at index: Int) {
 		let widget = children[index].widget
@@ -181,12 +171,18 @@ open class TabController: WidgetController {
 
 public class TabItem {
 
+	/**
+		The title to be displayed in the switcher
+	*/
 	public var title: String? {
 		didSet {
 			onUpdate?();
 		}
 	}
 
+	/**
+		The name of the item to be displayed in the switcher
+	*/
 	public var iconName: String? {
 		didSet {
 			onUpdate?();
