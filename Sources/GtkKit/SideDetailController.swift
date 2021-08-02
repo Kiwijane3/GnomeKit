@@ -114,7 +114,7 @@ public class SideDetailController: WidgetController {
 			})
 		} else {
 			detailStack.transitionType = .overLeft
-			self.didDisplayDetailController(
+			self.didDisplayDetailController()
 			detailStack.setVisible(child: detailWidget, onComplete: { [weak self] () in
 				self?.cleanupPreviousDetailWidget()
 			})
