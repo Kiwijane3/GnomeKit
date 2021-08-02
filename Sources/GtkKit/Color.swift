@@ -45,6 +45,9 @@ public class Color {
 
 public extension Color {
 
+	static let black = Color(red: 0, green: 0, blue: 0)
+	static let white = Color(red: 1.0, green: 1.0, blue: 1.0)
+
 	static let systemBlue1 = Color(red: 153 / 255, green: 193 / 255, blue: 241 / 255)
 	static let systemBlue2 = Color(red: 98 / 255, green: 160 / 255, blue: 234 / 255)
 	static let systemBlue3 = Color(red: 53 / 255, green: 132 / 255, blue: 228 / 225)
