@@ -187,3 +187,11 @@ public protocol SideDetailControllerDelegate {
 	func sideDetailControllerDismissedDetail(_ sideDetailController: SideDetailController)
 
 }
+
+public extension SideDetailControllerDelegate {
+
+	func sideDetailController(_ sideDetailController: SideDetailController, displayed detailChild: WidgetController) {}
+
+	func sideDetailControllerDismissedDetail(_ sideDetailController: SideDetailController) {}
+
+}
