@@ -152,7 +152,7 @@ public class SideDetailController: WidgetController {
 			if detailRevealer.childRevealed {
 				detailRevealer.set(revealChild: false, onComplete: { [weak self] () in
 					self?.didDismissDetailController()
-					self?.detailRevealer?.removeAllChildren()
+					self?.detailStack?.removeAllChildren()
 				})
 			} else {
 				detailRevealer.removeAllChildren()
