@@ -34,6 +34,7 @@ public class PrintInteractionController: PresentationController {
 		printInfo?.apply(to: settings)
 		operation.set(printSettings: settings)
 		operation.set(nPages: printPageRenderer.numberOfPages)
+		operation.setUse(fullPage: true)
 		operation.onBeginPrint() { [printPageRenderer] (operation, context) in
 			let paperConfig = Self.paperConfig(for: context)
 			printPageRenderer.paperRect = paperConfig.paperRect
