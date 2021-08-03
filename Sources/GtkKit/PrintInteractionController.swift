@@ -39,6 +39,7 @@ public class PrintInteractionController: PresentationController {
 			printPageRenderer.paperRect = paperConfig.paperRect
 			printPageRenderer.printableRect = paperConfig.printableRect
 			printPageRenderer.prepare()
+			operation.set(nPages: printPageRenderer.numberOfPages)
 		}
 		operation.onDrawPage() { [printPageRenderer] (operation, context, index) in
 			let paperConfig = Self.paperConfig(for: context)
