@@ -74,14 +74,14 @@ public class PrintInteractionController: PresentationController {
 
 	static internal func paperConfig(for context: PrintContextProtocol) -> (paperRect: CGRect, printableRect: CGRect) {
 		let pageSetup = context.pageSetup!
-		let width = pageSetup.getPageWidth(unit: .points)
-		let height = pageSetup.getPageHeight(unit: .points)
+		let width = pageSetup.getPaperWidth(unit: .points)
+		let height = pageSetup.getPaperHeight(unit: .points)
 		let paperRect = CGRect(origin: .zero, size: CGSize(width: width, height: height))
 		let topMargin = pageSetup.getTopMargin(unit: .points)
-		let bottomMargin = pageSetup.getBottomMargin(unit: .points)
 		let leftMargin = pageSetup.getLeftMargin(unit: .points)
-		let rightMargin = pageSetup.getRightMargin(unit: .points)
-		let printableRect = CGRect(origin: CGPoint(x: topMargin, y: leftMargin), size: CGSize(width: width - (leftMargin + rightMargin), height: height - (topMargin + bottomMargin)))
+		let printableWidth = pageSetup.getPageWidth(unit: .points)
+		let printableHeight = pageSetup.getPageHeight(unit: .points)
+		let printableRect = CGRect(origin: CGPoint(x: topMargin, y: leftMargin), size: CGSize(width: printableWidth, height: printableHeight))
 		return (paperRect: paperRect, printableRect: printableRect)
 	}
 
