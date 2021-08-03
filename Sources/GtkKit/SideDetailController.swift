@@ -93,7 +93,6 @@ public class SideDetailController: WidgetController {
 		secondaryChild = controller
 		installDetail()
 		transitionDetailChild()
-		displayDetail()
 	}
 
 	public var stackTransitionCompleteHandlerId: Int?
@@ -146,10 +145,11 @@ public class SideDetailController: WidgetController {
 		guard let detailChild = secondaryChild else {
 			return false
 		}
+		previousDetailWidget = detailChild.widget
+		removeChild(detailChild)
 		if let detailRevealer = detailRevealer {
 			// Remove the detail child and remove its widget from the revealer once the revealer is collapsed.
 			if detailRevealer.childRevealed {
-				removeChild(detailChild)
 				detailRevealer.set(revealChild: false, onComplete: { [weak self] () in
 					self?.didDismissDetailController()
 					self?.detailRevealer?.removeAllChildren()
