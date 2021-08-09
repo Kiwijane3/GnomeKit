@@ -344,7 +344,7 @@ open class WidgetController {
 		The most recent ancestor of this controller that is a `NavigationController`
 	*/
 	public var navigationController: NavigationController? {
-		var current = parent
+		var current: WidgetController? = self
 		while let ancestor = current {
 			if let navigationController = ancestor as? NavigationController {
 				return navigationController
@@ -358,7 +358,7 @@ open class WidgetController {
 		The most recent ancestor of this controller that is a `TabController`
 	*/
 	public var tabController: TabController? {
-		var current = parent
+		var current: WidgetController? = self
 		while let ancestor = current {
 			if let tabController = ancestor as? TabController {
 				return tabController
@@ -372,7 +372,7 @@ open class WidgetController {
 		The most recent ancestor of this controller that is a `SideDetailController`
 	*/
 	public var sideDetailController: SideDetailController? {
-		var current = parent
+		var current: WidgetController? = self
 		while let ancestor = current {
 			if let sideDetailController = ancestor as? SideDetailController {
 				return sideDetailController
@@ -386,7 +386,7 @@ open class WidgetController {
 		The most recent ancestor of this controller that is a `SplitWidgetControlller`
 	*/
 	public var splitWidgetController: SplitWidgetController? {
-		var current = parent
+		var current: WidgetController? = self
 		while let ancestor = current {
 			if let splitWidgetController = ancestor as? SplitWidgetController {
 				return splitWidgetController
