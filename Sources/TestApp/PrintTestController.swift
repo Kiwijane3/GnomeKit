@@ -17,6 +17,7 @@ public class PrintTestController: WidgetController {
 
 	public override func widgetDidLoad() {
 		printButton.onClicked(handler: onPrint(_:))
+		headerbarItem.endItems = [BarButtonItem(iconName: "penguin-symbolic")]
 	}
 
 	func onPrint(_ button: ButtonRef) {
