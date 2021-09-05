@@ -10,7 +10,6 @@ Application.run(startupHandler: nil) { (app) in
 	let windowController = MainWindowController(application: Application(app))
 	windowController.install(controller: PrintTestController())
 	windowController.beginPresentation()
-	print("test")
 	IconTheme.registerIcons(in: Bundle.module)
 	print("Has test icon: \(IconTheme.getDefault().hasIcon(iconName: "penguin-symbolic"))")
 }

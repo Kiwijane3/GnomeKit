@@ -102,6 +102,10 @@ open class WidgetController {
 		return true
 	}
 
+	internal func uiPath() -> String? {
+		return bundle?.path(forResource: uiFile, ofType: "glade") ?? Bundle.main.path(forResource: "uiFile", ofType: "glade")
+	}
+
 	/**
 		Called once the widget has been loaded. This can be used to perform additional setup after loading the widget, particularly when it is automated, such as when the widget is loaded from a ui file
 	*/
