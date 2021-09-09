@@ -46,6 +46,8 @@ public class DocumentPickerController: PresentationController {
 
 	internal let onFileSelected: ((URL, FileType?) -> Void)
 
+	public var confirmButtonTitle: String?
+
 	/**
 		A handler called when the user cancels the document picker interaction
 	*/
@@ -203,6 +205,9 @@ public class DocumentPickerController: PresentationController {
 	}
 
 	func okButtonTitle() -> String {
+		if let confirmButtonTitle = confirmButtonTitle {
+			return confirmButtonTitle
+		}
 		switch mode {
 			case .create:
 				return "Create"
