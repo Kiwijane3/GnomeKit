@@ -43,7 +43,6 @@ public class ActionMenu: MenuElement {
 			return
 		}
 		popover = ActionMenuPopover(for: self)
-
 		let mainBox = Box(orientation: .vertical, spacing: 0)
 		popover.add(widget: mainBox)
 		for child in children {
@@ -51,6 +50,9 @@ public class ActionMenu: MenuElement {
 		}
 
 		mainBox.showAll()
+
+		// Open the root menu before calling showAll, or else the menu will show an animation of returning to the root when first opened.
+		popover.openSubmenu(name: "main")
 
 		popover.showAll()
 	}
@@ -137,7 +139,7 @@ public class ActionMenu: MenuElement {
 
 		submenuBox.showAll()
 
-		// Add deeper submenus later.
+		// Deeper submenus should be added later, so that gtk uses the correct transitions
 
 		for child in children {
 			child.installIn(box: submenuBox, popover: popover)
@@ -207,6 +209,22 @@ public class Action: MenuElement {
 	}
 
 }
+
+public class MenuSeparator: MenuElement {
+
+	public init() {
+
+	}
+
+	public func installIn(box: Box, popover: ActionMenuPopover) {
+		let separator = Separator(orientation: .vertical)
+		separator.marginStart = 4
+		separator.marginEnd = 4
+		box.packStart(child: separator, expand: false, fill: false, padding: 0)
+	}
+
+}
+
 
 public class ActionMenuPopover: PopoverMenu {
 

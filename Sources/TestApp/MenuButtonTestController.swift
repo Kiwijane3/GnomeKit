@@ -20,6 +20,7 @@ public class MenuButtonTestController: WidgetController {
 			Action(title: "Beta") {
 				print("Clicked Beta")
 			},
+			MenuSeparator(),
 			ActionMenu(title: "Submenu", children: [
 				Action(title: "Delta") {
 					print("Clicked Delta")
@@ -27,6 +28,7 @@ public class MenuButtonTestController: WidgetController {
 				Action(title: "Omega") {
 					print("Clicked Omega")
 				},
+				MenuSeparator(),
 				ActionMenu(title: "Submenu^2", children: [
 					Action(title: "Epsilon") {
 						print("Clicked Epsilon")
