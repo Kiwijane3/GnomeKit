@@ -1,5 +1,6 @@
 import Foundation
 import Gdk
+import CGtk
 import Gtk
 
 // A menu button is a button that displays an action menu when clicked
@@ -7,23 +8,22 @@ public class MenuButton: Button {
 
 	public var menu: ActionMenu?
 
-	public var widgetAnchor: Gravity = .south
+	public var position: GtkPositionType = .bottom
 
-	public var menuAnchor: Gravity = .north
-
-	public init(iconName: String? = nil, size: IconSize = .button, menu: ActionMenu) {
+	public init(iconName: String? = nil, size: IconSize = .button, menu: ActionMenu, position: GtkPositionType = .bottom) {
 		super.init(iconName: iconName, size: size)
 		self.menu = menu
+		self.position = position
 		configure()
 	}
 
-	public init(label: String, menu: ActionMenu) {
+	public init(label: String, menu: ActionMenu, position: GtkPositionType = .bottom) {
 		super.init(label: label)
 		self.menu = menu
 		configure()
 	}
 
-	public init(mnemonic: String, menu: ActionMenu) {
+	public init(mnemonic: String, menu: ActionMenu, position: GtkPositionType = .bottom) {
 		super.init(mnemonic: mnemonic)
 		self.menu = menu
 		configure()
@@ -41,7 +41,7 @@ public class MenuButton: Button {
 
 	private func configure() {
 		onClicked() { [unowned self] (_) in
-			menu?.popup(at: self, widgetAnchor: widgetAnchor, menuAnchor: menuAnchor)
+			menu?.present(from: self)
 		}
 		becomeSwiftObj()
 	}

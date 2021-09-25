@@ -9,7 +9,8 @@ import Foundation
 import GLibObject
 import Gtk
 
-/// The ItemHeaderBar is a headerbar that is extended
+
+/// The ItemHeaderBar is a headerbar that can make use of headerbars
 open class ItemHeaderbar: HeaderBar {
 
 	private var contextIdentifier = UUID()
@@ -30,13 +31,13 @@ open class ItemHeaderbar: HeaderBar {
 		}
 	}
 
-	private var supplementaryWidget: Widget?
+	var supplementaryWidget: Widget?
 
-	private var switcherWidget: Widget?
+	var switcherWidget: Widget?
 
-	private var startWidgets: [Widget] = []
+	var startWidgets: [Widget] = []
 
-	private var endWidgets: [Widget] = []
+	var endWidgets: [Widget] = []
 
 	/// ItemHeaderbar binds the allocatedWidth property on widget to its own width request
 	public init(item: HeaderbarItem?) {
@@ -87,10 +88,8 @@ open class ItemHeaderbar: HeaderBar {
 	}
 
 	public func loadTitle() {
-		print("Loading title")
 		if title != item?.title {
 			set(title: item?.title)
-			print("Loaded title \(title) on \(ObjectIdentifier(self))")
 		}
 		showAll()
 	}

@@ -276,6 +276,12 @@ public class BarButtonItem: BarItem {
 		self.menuProvider = menuProvider
 	}
 	
+	public convenience init(title: String? = nil, image: Image? = nil, iconName: String? = nil, style: ButtonStyle = .default, onClick: @escaping (() -> Void)) {
+		self.init(title: title, image: image, iconName: iconName, style: style, onClick: { (_) in
+			onClick()
+		})
+	}
+
 	public func getWidget(for contextIdentifier: UUID) -> Widget {
 		if let button = registry.retrieve(for: contextIdentifier) {
 			return button
@@ -336,9 +342,10 @@ public class BarButtonItem: BarItem {
 
 	public func clicked(_ button: ButtonRef) {
 		if let menu = menu {
-			menu.popup(at: button, widgetAnchor: .south, menuAnchor: .north)
-		} else if let menuProvider = menuProvider{
-			menuProvider().popup(at: button, widgetAnchor: .south, menuAnchor: .north)
+			menu.present(from: button)
+		} else if let menuProvider = menuProvider {
+			let menu = menuProvider()
+			menu.present(from: button)
 		} else if let onClick = onClick {
 			onClick(button)
 		}

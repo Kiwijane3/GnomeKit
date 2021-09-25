@@ -529,4 +529,6 @@ open class WidgetController {
 		return nil
 	}
 
+	// MARK:- KeyCommands
+
 }

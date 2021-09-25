@@ -2,7 +2,7 @@ import Foundation
 import Gtk
 
 /**
-	`PresentationController` handles presenting a view controller hierarchy in some sort of container/window. It is also responsible for managing the titlebar stack in the presented window.
+	`PresentationController` handles presenting a view controller hierarchy in some sort of container/window. It is also responsible for managing the titlebar stack in the presented container
 */
 open class PresentationController {
 
