@@ -44,7 +44,6 @@ public class ActionMenu: MenuElement {
 			return
 		}
 		popover = ActionMenuPopover(for: self)
-		popover.modal = true
 
 		let mainBox = Box(orientation: .vertical, spacing: 0)
 		popover.add(widget: mainBox)
@@ -52,12 +51,8 @@ public class ActionMenu: MenuElement {
 			child.installIn(box: mainBox, popover: popover)
 		}
 
-		mainBox.showAll()
-
 		// Open the root menu before calling showAll, or else the menu will show an animation of returning to the root when first opened.
 		popover.openSubmenu(name: "main")
-
-		popover.showAll()
 	}
 
 	private func buildBackButton() -> Button {
@@ -290,19 +285,23 @@ public class ActionMenuPopover: PopoverMenu {
 
 	public func present() {
 		// Create a reference to make sure the popover remains in memory until it is dismissed
-		ref()
+		//ref()
 		retainMenu()
 		stack = ["main"]
 		popup()
+		// NOTE:- For some reason, calling showAll before popup stops the popover from dismissing via outside clicks until it is manually closed
+		// So we call showAll here.
+		showAll()
 		// Release previous reference once presentation is done.
-		closeSignalId = onClosed() { [unowned self] (_) in
+		/**closeSignalId = onClosed() { [unowned self] (_) in
+			print("closed")
 			guard let closeSignalId = closeSignalId else {
 				return
 			}
 			signalHandlerDisconnect(handlerID: closeSignalId)
 			releaseMenu()
-			unref()
-		}
+			// unref()
+		}*/
 	}
 
 	public func retainMenu() {
