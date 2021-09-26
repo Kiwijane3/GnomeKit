@@ -9,7 +9,8 @@ public protocol MenuElement {
 
 		If you are implementing a `MenuElement` that can be used as a submenu, your implementaion should do the following:
 		First, install your submenu's box in the popover. Second, set the `submenu` child property for that box to an appropriate value.
-		Finally, add a button to the box to open the submenu, using `PopoverMenuProtocol.openSubmenu(name:)`, where name is the previous value
+		Finally, add a button to the box to open the submenu, using `PopoverMenuProtocol.openSubmenu(name:)`, where name is the previous value.
+		Also, make sure you add child `MenuElement`s after registering the box, as this allows the correct animations to be made for submenus
 
 		- Parameter box: The box used to present the parent `MenuElement`'s children. Install your action's controls here.
 		- Parameter popover: The popover used to display the menu. You can call `popdown` once your action
@@ -43,6 +44,8 @@ public class ActionMenu: MenuElement {
 			return
 		}
 		popover = ActionMenuPopover(for: self)
+		popover.modal = true
+
 		let mainBox = Box(orientation: .vertical, spacing: 0)
 		popover.add(widget: mainBox)
 		for child in children {
@@ -65,7 +68,7 @@ public class ActionMenu: MenuElement {
 
 		let backButtonContents = Box(orientation: .horizontal, spacing: 4)
 
-		let backIndicator = Image(iconName: "go-previous-symbolic", size: .button)
+		let backIndicator = Image(iconName: "pan-start-symbolic", size: .button)
 		backButtonContents.packStart(child: backIndicator, expand: false, fill: false, padding: 0)
 
 		let startSpacer = Box(orientation: .horizontal, spacing: 0)
@@ -106,7 +109,7 @@ public class ActionMenu: MenuElement {
 		spacer.setSizeRequest(width: 4, height: -1)
 		linkButtonContents.packStart(child: spacer, expand: false, fill: false, padding: 0)
 
-		let linkIndicator = Image(iconName: "go-next-symbolic", size: .button)
+		let linkIndicator = Image(iconName: "pan-end-symbolic", size: .button)
 		linkButtonContents.packEnd(child: linkIndicator, expand: false, fill: false, padding: 0)
 
 		linkButtonContents.marginStart = 4
