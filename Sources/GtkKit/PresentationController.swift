@@ -175,6 +175,12 @@ open class PresentationController {
 		headerbarStack.update(with: presentedController?.headerbarState())
 	}
 
+	var accelGroups: [AccelGroup] = []
+
+	open func refreshAccelerators() {
+
+	}
+
 	/**
 		Travels up the chain of presentation controllers to find the most recent ancestor of the given type.
 

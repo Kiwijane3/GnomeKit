@@ -529,6 +529,63 @@ open class WidgetController {
 		return nil
 	}
 
-	// MARK:- KeyCommands
+	// MARK:- Keyboard Accelerators
+
+	/// Contains the `KeyAction`s for the accelerators that should be available while this controller is displayed
+	public var keyActions: [KeyAction] = [] {
+		didSet {
+			buildAccelerators()
+		}
+	}
+
+	private var accelGroup: AccelGroup?
+
+	private func buildAccelerators() {
+		print("Building accelerators")
+		if keyActions.isEmpty {
+			accelGroup = nil
+		}
+		let accelGroup = AccelGroup()
+		for keyAction in keyActions {
+			accelGroup.connect(keyAction: keyAction)
+		}
+		self.accelGroup = accelGroup
+		acceleratorsNeedRefresh()
+	}
+
+	public func resolveAccelGroups() -> [AccelGroup] {
+		var output = [] as [AccelGroup]
+		if let accelGroup = accelGroup {
+			output.append(accelGroup)
+		}
+		if let mainChild = mainChild {
+			output.append(contentsOf: mainChild.resolveAccelGroups())
+		}
+		if let secondaryChild = secondaryChild {
+			output.append(contentsOf: secondaryChild.resolveAccelGroups())
+		}
+		if let tertiaryChild = tertiaryChild {
+			output.append(contentsOf: tertiaryChild.resolveAccelGroups())
+		}
+		print("Resolved accelerators as: \(output)")
+		return output
+	}
+
+	/**
+		Requests that the `PresentationController managing this controller update the accelerators in use.
+	*/
+	public func acceleratorsNeedRefresh() {
+		presentingController?.refreshAccelerators()
+	}
+
+	/**
+		Requests that the `PresentationController` managing this controller updates the headerbar contents and accelerators.
+		Container controllers should call this when the presented controllers are updated.
+	*/
+	public func presenterShouldRefresh() {
+		acceleratorsNeedRefresh()
+		headerNeedsRefresh()
+	}
+
 
 }

@@ -51,6 +51,7 @@ open class WindowController: PresentationController {
 			showHeaderbar()
 		}
 		refreshHeader()
+		refreshAccelerators()
 		container.showAll()
 		presentedController?.presentingController = self
 		windowDelegate?.presentationDidBegin(self, withWindow: window)
@@ -59,6 +60,17 @@ open class WindowController: PresentationController {
 
 	open override func endPresentation() {
 		window.close()
+	}
+
+	open override func refreshAccelerators() {
+		for accelGroup in accelGroups {
+			window.remove(accelGroup: accelGroup)
+		}
+		accelGroups = presentedController?.resolveAccelGroups() ?? []
+		for accelGroup in accelGroups {
+			window.add(accelGroup: accelGroup)
+		}
+		print("Refreshing accelerators")
 	}
 	
 }

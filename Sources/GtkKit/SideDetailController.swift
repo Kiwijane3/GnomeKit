@@ -83,6 +83,7 @@ public class SideDetailController: WidgetController {
 		addChild(controller)
 		primaryChild = controller
 		installPrimary()
+		presenterShouldRefresh()
 	}
 
 	public override func showSecondaryViewController(_ controller: WidgetController) {
@@ -93,6 +94,7 @@ public class SideDetailController: WidgetController {
 		secondaryChild = controller
 		installDetail()
 		transitionDetailChild()
+		presenterShouldRefresh()
 	}
 
 	public var stackTransitionCompleteHandlerId: Int?

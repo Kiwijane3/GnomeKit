@@ -41,6 +41,12 @@ public class MenuButtonTestController: WidgetController {
 		]))
 		(widget as? Box)?.packStart(child: menuButton, expand: false, fill: false, padding: 0)
 
+		keyActions = [
+			KeyAction(input: "n", modifierFlags: .control) {
+				print("Pressed ctrl+n")
+			}
+		]
+
 	}
 
 	public func buildPopoverMenu() {

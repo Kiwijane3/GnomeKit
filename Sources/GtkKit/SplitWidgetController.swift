@@ -66,7 +66,7 @@ public class SplitWidgetController: WidgetController {
 		primaryChild = controller
 		installPrimary()
 		primaryRevealer?.revealChild = true
-		headerNeedsRefresh()
+		presenterShouldRefresh()
 	}
 
 	public override func showSecondaryViewController(_ controller: WidgetController) {
@@ -77,7 +77,7 @@ public class SplitWidgetController: WidgetController {
 		addChild(controller)
 		secondaryChild = controller
 		installSecondary()
-		headerNeedsRefresh()
+		presenterShouldRefresh()
 	}
 
 	public func expandPrimary() {

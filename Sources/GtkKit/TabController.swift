@@ -107,9 +107,9 @@ open class TabController: WidgetController {
 			self?.loadItem(at: index);
 		}
 		widget.showAll();
-		// This is supposed to detect when the stack switcher changes the view, but I'm not sure if it will work. There isn't an explicit signal for this.
+		// This is supposed to detect when the stack switcher changes the view.
 		widgetRef.onShow(handler: { [weak self] (_) in
-			self?.mainUpdated()
+			self?.presenterShouldRefresh()
 		})
 		loadPositions()
 		controller.installedIn(self);
@@ -161,10 +161,6 @@ open class TabController: WidgetController {
 		if let iconName = item.iconName {
 			stack.set(child: widget, property: PropertyName.init("icon-name"), value: Value(iconName))
 		}
-	}
-
-	public override func mainUpdated() {
-		parent?.mainUpdated();
 	}
 
 }

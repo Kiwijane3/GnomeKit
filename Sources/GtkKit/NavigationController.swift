@@ -86,7 +86,7 @@ public class NavigationController: WidgetController {
 		stack.setVisible(child: controller.widget)
 		mainChild?.installedIn(self)
 		stack.showAll()
-		headerNeedsRefresh()
+		presenterShouldRefresh()
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class NavigationController: WidgetController {
 			})
 			mainChild?.installedIn(self)
 			stack.showAll()
-			headerNeedsRefresh()
+			presenterShouldRefresh()
 		}
 	}
 
