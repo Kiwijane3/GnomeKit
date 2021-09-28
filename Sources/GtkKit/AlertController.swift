@@ -119,6 +119,9 @@ public class AlertAction {
 	public var isEnabled: Bool = true {
 		didSet {
 			button?.sensitive = isEnabled
+			if style == .suggested {
+				button?.grabDefault()
+			}
 		}
 	}
 
