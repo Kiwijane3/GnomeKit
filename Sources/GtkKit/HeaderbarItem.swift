@@ -317,6 +317,9 @@ public class BarButtonItem: BarItem {
 
 	public func loadActive(_ button: Button) {
 		button.sensitive = active
+		if style == .recommended, active == true {
+			button.grabDefault()
+		}
 	}
 	
 	public func loadStyle(_ button: Button) {

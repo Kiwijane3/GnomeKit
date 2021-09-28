@@ -37,6 +37,7 @@ public class AlertController: PresentationController {
 		container = MessageDialog(buttons: .none, text: title ?? "", secondaryText: message)
 		messageDialog.setTransientFor(parent: ancestor(ofType: WindowController.self)?.window)
 		messageDialog.set(position: .centerOnParent)
+		var defaultButton: WidgetRef?
 		for i in 0..<actions.count {
 			let action = actions[i]
 			// Respond id is the index of the relevant action
@@ -47,6 +48,7 @@ public class AlertController: PresentationController {
 			if action.style == .suggested {
 				button?.styleContext.addClass(className: "suggested-action")
 				button?.set(canDefault: true)
+				defaultButton = button
 			}
 			action.button = button
 		}
@@ -73,6 +75,7 @@ public class AlertController: PresentationController {
 			self?.containerDidUnrealise()
 		}
 		messageDialog.showAll()
+		defaultButton?.grabDefault()
 	}
 
 	public override func endPresentation() {
