@@ -15,12 +15,18 @@ public class AlertController: PresentationController {
 
 	public private(set) var actions: [AlertAction]
 
+	// The action that should be the default action.
+	private var defaultAction: AlertAction? {
+		return actions.last(where: { (action) -> Bool in
+			return action.isEnabled && action.style == .suggested
+		})
+	}
+
 	public var preferredAction: AlertAction?
 
 	private var textEntryConfigurators: [((Entry) -> Void)?]
 
 	public private(set) var textEntries: [Entry]
-
 
 	private var onResponseSignalID: Int?
 
@@ -64,6 +70,7 @@ public class AlertController: PresentationController {
 			entry.marginStart = 8
 			entry.marginEnd = 8
 			messageDialog.contentArea.packEnd(child: entry, expand: false, fill: false, padding: 0)
+			entry.onActivate(handler: onEntryActivate(_:))
 		}
 		onResponseSignalID = messageDialog.onResponse() { [weak self] (_, responseID) in
 			if responseID > 0 {
@@ -75,7 +82,7 @@ public class AlertController: PresentationController {
 			self?.containerDidUnrealise()
 		}
 		messageDialog.showAll()
-		defaultButton?.grabDefault()
+		defaultAction?.button?.grabDefault()
 	}
 
 	public override func endPresentation() {
@@ -95,6 +102,13 @@ public class AlertController: PresentationController {
 
 	public func addEntry(configurationHandler handler: ((Entry)-> Void)?) {
 		textEntryConfigurators.append(handler)
+	}
+
+	private func onEntryActivate(_ entry: EntryRef) {
+		if let defaultAction = defaultAction {
+			defaultAction.activate()
+			endPresentation()
+		}
 	}
 
 }
