@@ -19,8 +19,9 @@ public class MenuButtonTestController: WidgetController {
 				alert.addAction(AlertAction(title: "Ok"))
 				present(alert)
 			},
-			Action(title: "Beta") {
-				print("Clicked Beta")
+			Action(title: "Beta") { [unowned self] in
+				let labelController = LabelController(text: "Test")
+				present(labelController)
 			},
 			MenuSeparator(),
 			ActionMenu(title: "Submenu", children: [

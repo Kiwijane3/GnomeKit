@@ -325,12 +325,16 @@ public class BarButtonItem: BarItem {
 		}
 		if style != .recommended {
 			button.styleContext.removeClass(className: "suggested-action")
+			button.canDefault = false
+			button.receivesDefault = false
 		}
 		if style == .destructive {
 			button.styleContext.addClass(className: "destructive-action")
 		}
 		if style == .recommended {
 			button.styleContext.addClass(className: "suggested-action")
+			button.canDefault = true
+			button.receivesDefault = true
 		}
 	}
 

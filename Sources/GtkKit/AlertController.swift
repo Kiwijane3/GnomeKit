@@ -21,6 +21,7 @@ public class AlertController: PresentationController {
 
 	public private(set) var textEntries: [Entry]
 
+
 	private var onResponseSignalID: Int?
 
 	public init(title: String?, message: String?) {
@@ -45,6 +46,7 @@ public class AlertController: PresentationController {
 			}
 			if action.style == .suggested {
 				button?.styleContext.addClass(className: "suggested-action")
+				button?.set(canDefault: true)
 			}
 			action.button = button
 		}

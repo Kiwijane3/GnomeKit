@@ -24,8 +24,10 @@ public class LabelController: WidgetController {
 		grid.setSizeRequest(width: 200, height: -1)
 		widget = grid
 		headerbarItem.endItems = [
-			BarButtonItem(
-			)
+			BarButtonItem(title: "Close", style: .recommended) { [unowned self] in
+				dismiss()
+			},
+			BarButtonItem(title: "Dummy")
 		]
 	}
 

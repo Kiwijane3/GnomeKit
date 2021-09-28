@@ -1,4 +1,5 @@
 import Foundation
+import Gdk
 import Gtk
 
 public class ModalWindowController: WindowController {
@@ -6,9 +7,11 @@ public class ModalWindowController: WindowController {
 	/**
 		The window of the most recent `WindowController` ancestor.
 	*/
-	public var parentWindow: Window? {
+	public var parentWindow: Gtk.Window? {
 		return ancestor(ofType: WindowController.self)?.window
  	}
+
+ 	var closeController: EventControllerKey?
 
 	/**
 		The preferred size of the presented window.
@@ -32,8 +35,18 @@ public class ModalWindowController: WindowController {
 			window.setDefaultSize(width: Int(preferredSize.width), height: Int(preferredSize.height))
 		}
 		container = window
+
+		closeController = EventControllerKey(widget: self.window)
+		closeController?.onKeyReleased(handler: onKeyReleased)
+
 		window.onUnrealize() { [weak self] (_) in
 			self?.containerDidUnrealise()
+		}
+	}
+
+	public func onKeyReleased(_ controller: EventControllerKeyRef, keyval: UInt, keycode: UInt, state: Gdk.ModifierType) {
+		if keyval == Gdk.KEY_Escape {
+			endPresentation()
 		}
 	}
 

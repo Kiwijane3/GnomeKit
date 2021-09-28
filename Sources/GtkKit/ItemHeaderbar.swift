@@ -135,4 +135,19 @@ open class ItemHeaderbar: HeaderBar {
 		showAll()
 	}
 
+	/// Sets the first item with the "suggested-action" style class as the default. Should be used whenever the headerbar appears, so that the correct default item is set at all times.
+	public func setDefault() {
+		// Set the default widget. End widgets have priority over start widgets, and earlier widgets have priority over later widgets.
+		// The default widget must have the "suggested-action" style class.
+		let suggestedFilter = { (widgets: [Widget]) -> Widget? in
+			widgets.first(where: { (widget) -> Bool in
+				return widget.styleContext.hasClass(className: "suggested-action")
+			})
+		}
+		let suggested = suggestedFilter(endWidgets) ?? suggestedFilter(startWidgets)
+		if let suggested = suggested {
+			suggested.grabDefault()
+		}
+	}
+
 }

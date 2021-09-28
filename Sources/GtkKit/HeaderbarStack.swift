@@ -98,6 +98,7 @@ public class HeaderbarStack: Stack {
 		bar.showCloseButton = showsWindowControls
 		displayedBar = bar
 		animateTransition(to: bar)
+		bar.setDefault()
 		items = newItems
 	}
 
