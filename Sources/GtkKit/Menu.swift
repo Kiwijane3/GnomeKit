@@ -50,8 +50,7 @@ public class ActionMenu: MenuElement {
 		for child in children {
 			child.installIn(box: mainBox, popover: popover)
 		}
-
-		// Open the root menu before calling showAll, or else the menu will show an animation of returning to the root when first opened.
+		mainBox.showAll()
 		popover.openSubmenu(name: "main")
 	}
 
@@ -135,13 +134,13 @@ public class ActionMenu: MenuElement {
 		}
 		submenuBox.packStart(child: backButton, expand: false, fill: false, padding: 0)
 
-		submenuBox.showAll()
-
 		// Deeper submenus should be added later, so that gtk uses the correct transitions
 
 		for child in children {
 			child.installIn(box: submenuBox, popover: popover)
 		}
+
+		submenuBox.showAll()
 
 	}
 
@@ -291,7 +290,6 @@ public class ActionMenuPopover: PopoverMenu {
 		popup()
 		// NOTE:- For some reason, calling showAll before popup stops the popover from dismissing via outside clicks until it is manually closed
 		// So we call showAll here.
-		showAll()
 		// Release previous reference once presentation is done.
 		/**closeSignalId = onClosed() { [unowned self] (_) in
 			print("closed")

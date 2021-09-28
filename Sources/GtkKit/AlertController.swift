@@ -62,7 +62,9 @@ public class AlertController: PresentationController {
 			messageDialog.contentArea.packEnd(child: entry, expand: false, fill: false, padding: 0)
 		}
 		onResponseSignalID = messageDialog.onResponse() { [weak self] (_, responseID) in
-			self?.actions[responseID].activate()
+			if responseID > 0 {
+				self?.actions[responseID].activate()
+			}
 			self?.endPresentation()
 		}
 		messageDialog.onUnrealize() { [weak self] (_) in

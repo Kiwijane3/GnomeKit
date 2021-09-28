@@ -14,8 +14,10 @@ public class MenuButtonTestController: WidgetController {
 
 	public override func widgetDidLoad() {
 		let menuButton = MenuButton(label: "Show Menu", menu: ActionMenu(children: [
-			Action(title: "Alpha") {
-				print("Clicked Alpha")
+			Action(title: "Alpha") { [unowned self] in
+				let alert = AlertController(title: "Test", message: "Test Alert")
+				alert.addAction(AlertAction(title: "Ok"))
+				present(alert)
 			},
 			Action(title: "Beta") {
 				print("Clicked Beta")
