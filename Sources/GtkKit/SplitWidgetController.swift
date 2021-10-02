@@ -73,7 +73,6 @@ public class SplitWidgetController: WidgetController {
 		if let secondaryChild = secondaryChild {
 			removeChild(secondaryChild)
 		}
-		print("Installing \(controller) as secondary child")
 		addChild(controller)
 		secondaryChild = controller
 		installSecondary()
@@ -95,12 +94,10 @@ public class SplitWidgetController: WidgetController {
 	}
 
 	open override func headerbarState() -> HeaderbarState {
-		print("headerbarState() called while secondaryChild was: \(secondaryChild)")
 		return .complex(states: [primaryChild?.headerbarState(), secondaryChild?.headerbarState()])
 	}
 
 	open override func setupComplexHeaderbar() -> (Widget, [HeaderbarStack])? {
-		print("setupComplexHeaderbar()")
 		let box = Box(orientation: .horizontal, spacing: 0)
 		let headerRevealer = Revealer()
 		// We assume that headerbar setup occurs after the widget is loaded. PresentationControllers should ensure this is the case.

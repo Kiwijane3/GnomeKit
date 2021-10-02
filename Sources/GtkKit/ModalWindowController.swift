@@ -29,7 +29,6 @@ public class ModalWindowController: WindowController {
 		window.setKeepAbove(setting: true)
 		window.resizable = false
 		if let parentWindow = ancestor(ofType: WindowController.self)?.window {
-			print("Becoming transient")
 			window.setTransientFor(parent: parentWindow)
 			window.set(position: .centerOnParent)
 			window.setDefaultSize(width: Int(preferredSize.width), height: Int(preferredSize.height))

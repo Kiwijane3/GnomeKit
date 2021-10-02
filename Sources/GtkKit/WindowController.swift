@@ -70,7 +70,6 @@ open class WindowController: PresentationController {
 		for accelGroup in accelGroups {
 			window.add(accelGroup: accelGroup)
 		}
-		print("Refreshing accelerators")
 	}
 	
 }

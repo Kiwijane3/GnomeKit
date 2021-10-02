@@ -81,9 +81,7 @@ open class WidgetController {
 		Attempts to load the widget specified by `widgetName` from the ui file. Returns true if successful
 	*/
 	internal func loadWidgetFromBuilder() -> Bool {
-		debugPrint("Attempting to load from builder")
 		guard let widgetName = widgetName else {
-			print("Could not load")
 			return false
 		}
 		guard let bundle = bundle else {
@@ -92,13 +90,11 @@ open class WidgetController {
 		guard let uiPath = bundle.path(forResource: uiFile, ofType: "glade") else {
 			return false
 		}
-		debugPrint("Loading from uiPath \(uiPath)")
 		let builder = Builder(file: uiPath)
 		guard let object = builder.getObject(name: widgetName), object.isAWidget() else {
 			return false
 		}
 		widget = Widget(retainingRaw: object.ptr)
-		debugPrint("Successfully loaded widget")
 		return true
 	}
 
@@ -184,14 +180,10 @@ open class WidgetController {
 	*/
 	open func present(_ controller: WidgetController) {
 		addChild(controller)
-		print("Added child")
 		presentedController = createPresentationController(for: controller.presentation)
-		print("Created presentation controller: \(presentedController)")
 		presentedController!.presentingController = self
 		presentedController!.install(controller: controller)
-		print("Installed controller in presentation controller")
 		presentedController!.beginPresentation()
-		print("Presented")
 	}
 
 	private var _presentation: ModalPresentation?;
@@ -321,11 +313,7 @@ open class WidgetController {
 	/**
 		The `WidgetController` that has shown or presented this controller
 	*/
-	public var parent: WidgetController? {
-		didSet {
-			print("Controller \(self) had parent set to \(parent)")
-		}
-	}
+	public var parent: WidgetController?
 
 	/**
 		The most recent ancestor `PresentationController` that is a `WindowController`
@@ -409,7 +397,6 @@ open class WidgetController {
 		Adds `controller` as a child of this controller
 	*/
 	open func addChild(_ controller: WidgetController) {
-		print("Controller \(self) added controller \(controller)")
 		children.append(controller);
 		controller.parent = self;
 	}
@@ -541,7 +528,6 @@ open class WidgetController {
 	private var accelGroup: AccelGroup?
 
 	private func buildAccelerators() {
-		print("Building accelerators")
 		if keyActions.isEmpty {
 			accelGroup = nil
 		}
@@ -567,7 +553,6 @@ open class WidgetController {
 		if let tertiaryChild = tertiaryChild {
 			output.append(contentsOf: tertiaryChild.resolveAccelGroups())
 		}
-		print("Resolved accelerators as: \(output)")
 		return output
 	}
 

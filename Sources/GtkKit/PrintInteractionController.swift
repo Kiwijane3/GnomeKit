@@ -58,7 +58,6 @@ public class PrintInteractionController: PresentationController {
 				try operation.run(action: .printDialog)
 			}
 		} catch {
-			print("Could not print, error: \(error)")
 			containerDidUnrealise()
 		}
 	}

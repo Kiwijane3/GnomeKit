@@ -72,7 +72,6 @@ public class HeaderbarStack: Stack {
 	}
 
 	public func update(with state: HeaderbarState?) {
-		print("update(with: \(state)")
 		switch state {
 			case .simple(let items, let main, let supplementaryItem, let switcherItem):
 				update(with: items, main: main, supplementaryItem: supplementaryItem, switcherItem: switcherItem)
@@ -84,7 +83,6 @@ public class HeaderbarStack: Stack {
 	}
 
 	public func update(with newItems: Set<HeaderbarItem>, main: HeaderbarItem?, supplementaryItem: BarItem?, switcherItem: BarItem?) {
-		print("Displaying single headerbar with item with title: \(main?.title)")
 		buildBars(for: newItems.subtracting(items))
 		removeBars(for: items.subtracting(newItems))
 		let bar: ItemHeaderbar
@@ -104,11 +102,11 @@ public class HeaderbarStack: Stack {
 
 	public func complexUpdate(with state: [HeaderbarState?]) {
 		guard let complexHeaderWidget = complexHeaderWidget, let complexHeaderStacks = complexHeaderStacks else {
-			print("Attempted to update split bar configuration, but split bar was not setup")
+			debugPrint("Warning: Attempted to update split bar configuration, but split bar was not setup")
 			return
 		}
 		guard complexHeaderStacks.count >= state.count else {
-			print("Attempted to update a complex header bar configuration with wrong number of items. Make sure the size of items, main items, and supplementary items matches the number of bars")
+			debugPrint("Warning: Attempted to update a complex header bar configuration with wrong number of items. Make sure the size of items, main items, and supplementary items matches the number of bars")
 			return
 		}
 		for index in 0..<complexHeaderStacks.count {

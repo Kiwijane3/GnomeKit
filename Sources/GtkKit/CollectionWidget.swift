@@ -6,12 +6,6 @@ public class CollectionWidget<S: Hashable, I: Hashable>: SectionedWidget<S, I> {
 	var layoutProvider: ((S) -> CollectionLayoutSection)?
 	
 	var headerProvider: ((S) -> Widget?)?
-	
-	public override func setup() {
-		onCheckResize(handler: { (container) in
-			debugPrint("Check Resize")
-		})
-	}
 
 	/**
 		Sets the handler for providing the `CollectionLayoutSection`s for each section
@@ -47,7 +41,6 @@ public class CollectionWidget<S: Hashable, I: Hashable>: SectionedWidget<S, I> {
 	}
 
 	public func calculateSize() {
-		debugPrint("Successfully intercepted size allocation")
 	}
 
 }

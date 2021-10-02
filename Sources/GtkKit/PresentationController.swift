@@ -16,7 +16,6 @@ open class PresentationController {
 			if _container == nil {
 				generateContainer()
 			}
-			print("container: \(_container)")
 			return _container
 		}
 		set {

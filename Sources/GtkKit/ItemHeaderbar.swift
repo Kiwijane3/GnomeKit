@@ -68,7 +68,6 @@ open class ItemHeaderbar: HeaderBar {
 		loadTitleWidget();
 		loadItems();
 		item.onUpdate(for: contextIdentifier) { [weak self] (field) in
-			debugPrint("Headerbar supplier field \(field) was updated, updated headerbar to reflect state")
 			switch field {
 			case .title:
 				self?.loadTitle();
@@ -115,7 +114,6 @@ open class ItemHeaderbar: HeaderBar {
 		removeAllChildren()
 		supplementaryWidget = supplementaryItem?.getWidget(for: contextIdentifier)
 		if let supplementaryWidget = supplementaryWidget {
-			print("Supplementary widget: \(supplementaryWidget)")
 			packStart(child: supplementaryWidget)
 		}
 		if let item = item {
