@@ -230,25 +230,24 @@ public class BezierPath {
 		Returns whether `point` falls within the area painted by filling this path
 	*/
 	public func fillContains(_ point: CGPoint) -> Bool {
-		// Since all contains and bounding box calculations are self-contained, we can just clear the path.
-		BezierPath.calcContext.newPath();
-		writePath(to: BezierPath.calcContext);
-		return BezierPath.calcContext.isInFill(Double(point.x), Double(point.y));
+		let surface = imageSurfaceCreate(format: .init(0), width: 0, height: 0)
+		let context = Context(surface: surface)
+		writePath(to: context)
+		return context.isInFill(Double(point.x), Double(point.y))
 	}
 	
 	/**
 		Returns whether `point` falls within the area painted by stroking this path
 	*/
 	public func strokeContains(_ point: CGPoint) -> Bool {
-		// Since all contains and bounding box calculations are self-contained, we can just clear the path.
-		BezierPath.calcContext.newPath();
+		let surface = imageSurfaceCreate(format: .init(0), width: 0, height: 0)
+		let context = Context(surface: surface)
 		writePath(to: BezierPath.calcContext);
 		return BezierPath.calcContext.isInStroke(Double(point.x), Double(point.y))
 	}
 	
 	// Writes this Path's operations onto the context.
 	internal func writePath(to context: ContextProtocol) {
-		var context = context;
 		context.lineWidth = lineWidth;
 		context.lineCap = lineCapStyle.cairo
 		context.lineJoin = lineJoinStyle.cairo
@@ -281,5 +280,5 @@ public class BezierPath {
 			}
 		}
 	}
-	
+
 }

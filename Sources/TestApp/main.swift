@@ -8,7 +8,7 @@ import GtkKit
 testPaperSizeConstants()
 Application.run(startupHandler: nil) { (app) in
 	let windowController = MainWindowController(application: Application(app))
-	windowController.install(controller: MenuButtonTestController())
+	windowController.install(controller: PathCollisionTestController())
 	windowController.beginPresentation()
 	IconTheme.registerIcons(in: Bundle.module)
 	print("Has test icon: \(IconTheme.getDefault().hasIcon(iconName: "penguin-symbolic"))")
