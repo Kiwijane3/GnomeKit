@@ -58,9 +58,6 @@ let windingFillRule = FillRule.init(0);
 
 public class BezierPath {
 	
-	// This empty shared graphical context is used by CGPoint to calculate path extents and contains.
-	internal static var calcContext: ContextProtocol = Context(surface: imageSurfaceCreate(format: .init(0), width: 0, height: 0));
-	
 	enum Operation {
 		case move(target: CGPoint)
 		case line(target: CGPoint)
