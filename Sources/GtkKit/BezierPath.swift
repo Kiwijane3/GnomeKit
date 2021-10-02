@@ -242,8 +242,8 @@ public class BezierPath {
 	public func strokeContains(_ point: CGPoint) -> Bool {
 		let surface = imageSurfaceCreate(format: .init(0), width: 0, height: 0)
 		let context = Context(surface: surface)
-		writePath(to: BezierPath.calcContext);
-		return BezierPath.calcContext.isInStroke(Double(point.x), Double(point.y))
+		writePath(to: context);
+		return context.isInStroke(Double(point.x), Double(point.y))
 	}
 	
 	// Writes this Path's operations onto the context.
